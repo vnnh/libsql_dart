@@ -1,7 +1,7 @@
 [package]
+edition = "2021"
 name = "libsql_dart"
 version = "0.1.0"
-edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "staticlib"]
@@ -10,9 +10,9 @@ crate-type = ["cdylib", "staticlib"]
 async-std = "1.12.0"
 flutter_rust_bridge = "=2.3.0"
 futures = "0.3.30"
-hyper-rustls = { version = "0.25", features = ["webpki-roots"] }
+hyper-rustls = {version = "0.25", features = ["webpki-roots"]}
 lazy_static = "1.5.0"
-libsql = "0.5.0"
+libsql = "0.9.4"
 log = "0.4.22"
 tokio = "1.39.2"
 uuid = "1.10.0"
