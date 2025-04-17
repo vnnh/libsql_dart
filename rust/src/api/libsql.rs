@@ -35,10 +35,26 @@ pub struct ConnectArgs {
     pub encryption_key: Option<String>,
     pub read_your_writes: Option<bool>,
     pub open_flags: Option<LibsqlOpenFlags>,
+    pub offline: Option<bool>,
 }
 
 pub async fn connect(args: ConnectArgs) -> ConnectResult {
-    let database = if let Some(sync_url) = args.sync_url {
+    let database = if args.sync_url.is_some() && args.offline.is_some_and(|offline| offline) {
+        let connector = hyper_rustls::HttpsConnectorBuilder::new()
+            .with_webpki_roots()
+            .https_or_http()
+            .enable_http1()
+            .build();
+
+        let builder = Builder::new_synced_database(
+            args.url,
+            args.sync_url.unwrap(),
+            args.auth_token.unwrap_or("".to_string()),
+        )
+        .connector(connector);
+
+        builder.build().await
+    } else if let Some(sync_url) = args.sync_url {
         let connector = hyper_rustls::HttpsConnectorBuilder::new()
             .with_webpki_roots()
             .https_or_http()
