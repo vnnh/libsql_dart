@@ -21,10 +21,23 @@ Future<void> main() async {
 
   final dir = await getApplicationCacheDirectory();
 
-  memoryClient = LibsqlClient(":memory:");
-  localClient = LibsqlClient("${dir.path}/local.db");
-  remoteClient = LibsqlClient(url, authToken: token);
-  replicaClient = LibsqlClient(
+  // memoryClient = LibsqlClient(":memory:");
+  memoryClient = LibsqlClient.memory();
+
+  // localClient = LibsqlClient("${dir.path}/local.db");
+  localClient = LibsqlClient.local("${dir.path}/local.db");
+
+  // remoteClient = LibsqlClient(url, authToken: token);
+  remoteClient = LibsqlClient.remote(url, authToken: token);
+
+  // replicaClient = LibsqlClient(
+  //   "${dir.path}/replica.db",
+  //   syncUrl: url,
+  //   authToken: token,
+  //   readYourWrites: true,
+  //   syncIntervalSeconds: 50,
+  // );
+  replicaClient = LibsqlClient.replica(
     "${dir.path}/replica.db",
     syncUrl: url,
     authToken: token,
