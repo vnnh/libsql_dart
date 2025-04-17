@@ -51,9 +51,7 @@ class LibsqlClient {
 
   LibsqlClient.memory() : url = ':memory:';
 
-  LibsqlClient.local(this.url, {this.openFlags, this.encryptionKey}) {
-    openFlags = LibsqlOpenFlags.readWrite;
-  }
+  LibsqlClient.local(this.url, {this.openFlags, this.encryptionKey});
 
   LibsqlClient.remote(this.url, {this.authToken});
 
@@ -64,9 +62,7 @@ class LibsqlClient {
     this.syncIntervalSeconds,
     this.readYourWrites,
     this.encryptionKey,
-  }) {
-    openFlags = LibsqlOpenFlags.readWrite;
-  }
+  });
 
   // :memory:, <LOCAL_PATH>, libsql://<URL>, http://<URL>, or https://<URL>
   final String url;
