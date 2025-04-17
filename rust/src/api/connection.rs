@@ -9,6 +9,7 @@ use crate::utils::{
         BatchResult, ExecuteResult, PrepareResult, QueryResult, SyncResult, TransactionResult,
     },
 };
+use async_std::path::Path;
 pub use libsql::TransactionBehavior;
 use uuid::Uuid;
 
@@ -76,6 +77,25 @@ impl LibsqlConnection {
         TransactionResult {
             transaction: LibsqlTransaction { transaction_id },
         }
+    }
+
+    pub async fn enable_extension(&self) {
+        let guard = DATABASE_REGISTRY.lock().await;
+        let (_, conn) = guard.get(&self.db_id).unwrap();
+        conn.load_extension_enable().unwrap();
+    }
+
+    pub async fn disable_extension(&self) {
+        let guard = DATABASE_REGISTRY.lock().await;
+        let (_, conn) = guard.get(&self.db_id).unwrap();
+        conn.load_extension_disable().unwrap();
+    }
+
+    pub async fn load_extension(&self, path: String, entry_point: Option<String>) {
+        let guard = DATABASE_REGISTRY.lock().await;
+        let (_, conn) = guard.get(&self.db_id).unwrap();
+        conn.load_extension(Path::new(&path), entry_point.as_deref())
+            .unwrap();
     }
 
     pub async fn close(&self) {
