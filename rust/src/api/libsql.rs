@@ -63,7 +63,7 @@ pub async fn connect(args: ConnectArgs) -> ConnectResult {
             ));
         }
 
-        builder = builder.read_your_writes(args.read_your_writes.unwrap_or(true));
+        builder = builder.read_your_writes(args.read_your_writes.unwrap_or(false));
 
         builder.build().await
     } else if args.url.starts_with("libsql://")
