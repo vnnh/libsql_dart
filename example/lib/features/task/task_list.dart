@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libsql_dart_example/features/task/blocs/blocs.dart';
@@ -6,13 +9,32 @@ import 'package:libsql_dart_example/features/task/repositories/repositories.dart
 import 'package:libsql_dart_example/features/task/task_add.dart';
 
 class TaskList extends StatefulWidget {
-  const TaskList({super.key});
+  const TaskList({super.key, this.syncOnNetworkChange = false});
+
+  final bool syncOnNetworkChange;
 
   @override
   State<TaskList> createState() => _TaskListState();
 }
 
 class _TaskListState extends State<TaskList> {
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
+  @override
+  void initState() {
+    if (widget.syncOnNetworkChange) {
+      _connectivitySubscription =
+          Connectivity().onConnectivityChanged.listen((event) {
+        if (event.contains(ConnectivityResult.wifi) ||
+            event.contains(ConnectivityResult.mobile)) {
+          if (!mounted) return;
+          context.read<TaskRepository>().sync();
+        }
+      });
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -85,6 +107,12 @@ class _TaskListState extends State<TaskList> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
   }
 }
 

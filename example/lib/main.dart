@@ -9,17 +9,22 @@ import 'package:provider/provider.dart';
 
 const url = String.fromEnvironment("TURSO_URL");
 const token = String.fromEnvironment("TURSO_TOKEN");
+const offlineUrl = String.fromEnvironment("TURSO_OFFLINE_URL");
+const offlineToken = String.fromEnvironment("TURSO_OFFLINE_TOKEN");
 const doTestExtension = false;
 
 late LibsqlClient memoryClient;
 late LibsqlClient localClient;
 late LibsqlClient remoteClient;
 late LibsqlClient replicaClient;
+late LibsqlClient offlineClient;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final dir = await getApplicationCacheDirectory();
+  await dir.delete(recursive: true);
+  await dir.create(recursive: true);
 
   // memoryClient = LibsqlClient(":memory:");
   memoryClient = LibsqlClient.memory();
@@ -35,7 +40,7 @@ Future<void> main() async {
   //   syncUrl: url,
   //   authToken: token,
   //   readYourWrites: true,
-  //   syncIntervalSeconds: 50,
+  //   syncIntervalSeconds: 3,
   // );
   replicaClient = LibsqlClient.replica(
     "${dir.path}/replica.db",
@@ -45,10 +50,23 @@ Future<void> main() async {
     syncIntervalSeconds: 3,
   );
 
+  // offlineClient = LibsqlClient(
+  //   "${dir.path}/offline.db",
+  //   syncUrl: url,
+  //   authToken: token,
+  //   offline: true,
+  // );
+  offlineClient = LibsqlClient.offline(
+    "${dir.path}/offline.db",
+    syncUrl: offlineUrl,
+    authToken: offlineToken,
+  );
+
   await bootstrapDatabase(memoryClient);
   await bootstrapDatabase(localClient);
   await bootstrapDatabase(remoteClient);
-  await bootstrapDatabase(replicaClient);
+  await bootstrapDatabase(replicaClient, sync: true);
+  await bootstrapDatabase(offlineClient, sync: true);
 
   if (doTestExtension) {
     final extensionTestClient = LibsqlClient("${dir.path}/extension.db");
@@ -71,6 +89,7 @@ class MyApp extends StatelessWidget {
           child: Builder(builder: (context) {
             return Center(
               child: Column(
+                spacing: 16,
                 children: [
                   FilledButton(
                     onPressed: () {
@@ -86,7 +105,6 @@ class MyApp extends StatelessWidget {
                     },
                     child: const Text("Memory"),
                   ),
-                  const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -101,7 +119,6 @@ class MyApp extends StatelessWidget {
                     },
                     child: const Text("Local"),
                   ),
-                  const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -116,7 +133,6 @@ class MyApp extends StatelessWidget {
                     },
                     child: const Text("Remote"),
                   ),
-                  const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -130,6 +146,20 @@ class MyApp extends StatelessWidget {
                       );
                     },
                     child: const Text("Replica"),
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Provider<TaskRepository>(
+                            create: (context) =>
+                                LibsqlTaskRepository(offlineClient),
+                            child: const TaskList(syncOnNetworkChange: true),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text("Offline"),
                   ),
                 ],
               ),

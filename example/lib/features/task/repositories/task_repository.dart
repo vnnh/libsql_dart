@@ -12,4 +12,6 @@ abstract class TaskRepository {
   Future<void> deleteTask(int id);
 
   Future<void> markTasksAsCompleted(List<int> ids);
+
+  Future<void> sync();
 }

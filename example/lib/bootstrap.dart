@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:libsql_dart/libsql_dart.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<void> bootstrapDatabase(LibsqlClient client) async {
+Future<void> bootstrapDatabase(LibsqlClient client, {bool sync = false}) async {
   await client.connect();
+  if (sync) await client.sync();
   await client.execute("drop table if exists tasks");
   await client.execute(
       "create table if not exists tasks (id integer primary key, title text, description text, completed integer)");
+  if (sync) await client.sync();
 }
 
 Future<void> runExtensionTest(LibsqlClient client) async {
