@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 const url = String.fromEnvironment("TURSO_URL");
 const token = String.fromEnvironment("TURSO_TOKEN");
+const doTestExtension = false;
 
 late LibsqlClient memoryClient;
 late LibsqlClient localClient;
@@ -35,6 +36,11 @@ Future<void> main() async {
   await bootstrapDatabase(localClient);
   await bootstrapDatabase(remoteClient);
   await bootstrapDatabase(replicaClient);
+
+  if (doTestExtension) {
+    final extensionTestClient = LibsqlClient("${dir.path}/extension.db");
+    await runExtensionTest(extensionTestClient);
+  }
 
   runApp(const MyApp());
 }

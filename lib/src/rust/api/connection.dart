@@ -26,10 +26,24 @@ class LibsqlConnection {
         that: this,
       );
 
+  Future<void> disableExtension() =>
+      RustLib.instance.api.crateApiConnectionLibsqlConnectionDisableExtension(
+        that: this,
+      );
+
+  Future<void> enableExtension() =>
+      RustLib.instance.api.crateApiConnectionLibsqlConnectionEnableExtension(
+        that: this,
+      );
+
   Future<ExecuteResult> execute(
           {required String sql, LibsqlParams? parameters}) =>
       RustLib.instance.api.crateApiConnectionLibsqlConnectionExecute(
           that: this, sql: sql, parameters: parameters);
+
+  Future<void> loadExtension({required String path, String? entryPoint}) =>
+      RustLib.instance.api.crateApiConnectionLibsqlConnectionLoadExtension(
+          that: this, path: path, entryPoint: entryPoint);
 
   Future<PrepareResult> prepare({required String sql}) => RustLib.instance.api
       .crateApiConnectionLibsqlConnectionPrepare(that: this, sql: sql);

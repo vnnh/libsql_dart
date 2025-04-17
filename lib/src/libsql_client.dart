@@ -189,6 +189,21 @@ class LibsqlClient {
     return Transaction(res.transaction);
   }
 
+  Future<void> loadExtension({required String path, String? entryPoint}) async {
+    if (_connection == null) throw Exception('Database is not connected');
+    await _connection!.loadExtension(path: path, entryPoint: entryPoint);
+  }
+
+  Future<void> enableExtension() async {
+    if (_connection == null) throw Exception('Database is not connected');
+    await _connection!.enableExtension();
+  }
+
+  Future<void> disableExtension() async {
+    if (_connection == null) throw Exception('Database is not connected');
+    await _connection!.disableExtension();
+  }
+
   /// Close the database
   Future<void> dispose() async {
     _connection?.close();
