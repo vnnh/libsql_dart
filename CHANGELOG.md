@@ -1,3 +1,12 @@
+## 0.5.0
+
+- supports offline-writes
+- add named constructor
+- example gradle stuffs
+- change readYourWrites default value to false
+- bump libsql crate from 0.5.0 to 0.9.4
+- support loading extension
+
 ## 0.4.6
 
 - prevent multiple client creations during hot restart
