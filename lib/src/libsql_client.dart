@@ -47,6 +47,7 @@ class LibsqlClient {
     this.encryptionKey,
     this.readYourWrites,
     this.openFlags,
+    this.offline,
   });
 
   LibsqlClient.memory() : url = ':memory:';
@@ -57,12 +58,15 @@ class LibsqlClient {
 
   LibsqlClient.replica(
     this.url, {
-    this.syncUrl,
+    required this.syncUrl,
     this.authToken,
     this.syncIntervalSeconds,
     this.readYourWrites,
     this.encryptionKey,
   });
+
+  LibsqlClient.offline(this.url, {required this.syncUrl, this.authToken})
+      : offline = true;
 
   // :memory:, <LOCAL_PATH>, libsql://<URL>, http://<URL>, or https://<URL>
   final String url;
@@ -77,6 +81,8 @@ class LibsqlClient {
   bool? readYourWrites;
   // Open flags for local database only
   LibsqlOpenFlags? openFlags;
+
+  bool? offline;
 
   LibsqlConnection? _connection;
 
@@ -96,6 +102,7 @@ class LibsqlClient {
         encryptionKey: encryptionKey,
         readYourWrites: readYourWrites,
         openFlags: openFlags,
+        offline: offline,
       ),
     );
     _connection = res.connection;

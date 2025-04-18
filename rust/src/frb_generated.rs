@@ -939,6 +939,7 @@ impl SseDecode for crate::api::libsql::ConnectArgs {
         let mut var_readYourWrites = <Option<bool>>::sse_decode(deserializer);
         let mut var_openFlags =
             <Option<crate::api::libsql::LibsqlOpenFlags>>::sse_decode(deserializer);
+        let mut var_offline = <Option<bool>>::sse_decode(deserializer);
         return crate::api::libsql::ConnectArgs {
             url: var_url,
             auth_token: var_authToken,
@@ -947,6 +948,7 @@ impl SseDecode for crate::api::libsql::ConnectArgs {
             encryption_key: var_encryptionKey,
             read_your_writes: var_readYourWrites,
             open_flags: var_openFlags,
+            offline: var_offline,
         };
     }
 }
@@ -1570,6 +1572,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::libsql::ConnectArgs {
             self.encryption_key.into_into_dart().into_dart(),
             self.read_your_writes.into_into_dart().into_dart(),
             self.open_flags.into_into_dart().into_dart(),
+            self.offline.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1964,6 +1967,7 @@ impl SseEncode for crate::api::libsql::ConnectArgs {
         <Option<String>>::sse_encode(self.encryption_key, serializer);
         <Option<bool>>::sse_encode(self.read_your_writes, serializer);
         <Option<crate::api::libsql::LibsqlOpenFlags>>::sse_encode(self.open_flags, serializer);
+        <Option<bool>>::sse_encode(self.offline, serializer);
     }
 }
 

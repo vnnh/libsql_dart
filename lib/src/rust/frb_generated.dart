@@ -803,8 +803,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ConnectArgs dco_decode_connect_args(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
     return ConnectArgs(
       url: dco_decode_String(arr[0]),
       authToken: dco_decode_opt_String(arr[1]),
@@ -813,6 +813,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       encryptionKey: dco_decode_opt_String(arr[4]),
       readYourWrites: dco_decode_opt_box_autoadd_bool(arr[5]),
       openFlags: dco_decode_opt_box_autoadd_libsql_open_flags(arr[6]),
+      offline: dco_decode_opt_box_autoadd_bool(arr[7]),
     );
   }
 
@@ -1281,6 +1282,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_readYourWrites = sse_decode_opt_box_autoadd_bool(deserializer);
     var var_openFlags =
         sse_decode_opt_box_autoadd_libsql_open_flags(deserializer);
+    var var_offline = sse_decode_opt_box_autoadd_bool(deserializer);
     return ConnectArgs(
         url: var_url,
         authToken: var_authToken,
@@ -1288,7 +1290,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         syncIntervalSeconds: var_syncIntervalSeconds,
         encryptionKey: var_encryptionKey,
         readYourWrites: var_readYourWrites,
-        openFlags: var_openFlags);
+        openFlags: var_openFlags,
+        offline: var_offline);
   }
 
   @protected
@@ -1773,6 +1776,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.encryptionKey, serializer);
     sse_encode_opt_box_autoadd_bool(self.readYourWrites, serializer);
     sse_encode_opt_box_autoadd_libsql_open_flags(self.openFlags, serializer);
+    sse_encode_opt_box_autoadd_bool(self.offline, serializer);
   }
 
   @protected

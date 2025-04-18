@@ -16,11 +16,13 @@ class LibsqlTaskRepository extends TaskRepository {
     await _client.execute(
         "insert into tasks (title, description, completed) values (?, ?, ?)",
         positional: [task.title, task.description, task.completed ? 1 : 0]);
+    if (_client.syncUrl?.isNotEmpty ?? false) await _client.sync();
   }
 
   @override
   Future<void> deleteTask(int id) async {
     await _client.execute("delete from tasks where id = ?", positional: [id]);
+    if (_client.syncUrl?.isNotEmpty ?? false) await _client.sync();
   }
 
   @override
@@ -40,6 +42,7 @@ class LibsqlTaskRepository extends TaskRepository {
     await _client.execute(
       "update tasks set completed = 1 where id in (${ids.join(",")})",
     );
+    if (_client.syncUrl?.isNotEmpty ?? false) await _client.sync();
   }
 
   @override
@@ -47,5 +50,10 @@ class LibsqlTaskRepository extends TaskRepository {
     if (_client.syncUrl?.isEmpty ?? true) return null;
     final dir = await getApplicationCacheDirectory();
     return DirectoryWatcher(dir.path).events;
+  }
+
+  @override
+  Future<void> sync() {
+    return _client.sync();
   }
 }

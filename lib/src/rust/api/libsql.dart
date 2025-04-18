@@ -22,6 +22,7 @@ class ConnectArgs {
   final String? encryptionKey;
   final bool? readYourWrites;
   final LibsqlOpenFlags? openFlags;
+  final bool? offline;
 
   const ConnectArgs({
     required this.url,
@@ -31,6 +32,7 @@ class ConnectArgs {
     this.encryptionKey,
     this.readYourWrites,
     this.openFlags,
+    this.offline,
   });
 
   @override
@@ -41,7 +43,8 @@ class ConnectArgs {
       syncIntervalSeconds.hashCode ^
       encryptionKey.hashCode ^
       readYourWrites.hashCode ^
-      openFlags.hashCode;
+      openFlags.hashCode ^
+      offline.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -54,7 +57,8 @@ class ConnectArgs {
           syncIntervalSeconds == other.syncIntervalSeconds &&
           encryptionKey == other.encryptionKey &&
           readYourWrites == other.readYourWrites &&
-          openFlags == other.openFlags;
+          openFlags == other.openFlags &&
+          offline == other.offline;
 }
 
 enum LibsqlOpenFlags {
