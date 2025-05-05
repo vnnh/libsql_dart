@@ -98,6 +98,10 @@ class CargoKitPlugin implements Plugin<Project> {
                 if (plugin.class.name == "FlutterPlugin") {
                     return plugin;
                 }
+				// https://github.com/irondash/cargokit/issues/93
+				if (plugin.class.name == "com.flutter.gradle.FlutterPlugin") {
+                    return plugin;
+                }
             }
             def plugin = _findFlutterPlugin(project.value.childProjects);
             if (plugin != null) {
@@ -132,7 +136,14 @@ class CargoKitPlugin implements Plugin<Project> {
             def jniLibs = project.android.sourceSets.maybeCreate(buildType).jniLibs;
             jniLibs.srcDir(new File(cargoOutputDir))
 
-            def platforms = plugin.getTargetPlatforms().collect()
+            def platforms
+
+			try {
+				platforms = plugin.getTargetPlatforms().collect()
+			} catch (Exception e) {
+				// https://github.com/irondash/cargokit/issues/93
+				platforms = com.flutter.gradle.FlutterPluginUtils.getTargetPlatforms(project).collect()
+			}
 
             // Same thing addFlutterDependencies does in flutter.gradle
             if (buildType == "debug") {
