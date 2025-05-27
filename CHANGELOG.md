@@ -1,3 +1,8 @@
+## 0.6.0
+
+- Turso embedded replica v2
+- bump dependencies
+
 ## 0.5.0
 
 - supports offline-writes

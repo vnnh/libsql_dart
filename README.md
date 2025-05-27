@@ -20,7 +20,7 @@ libsql_dart:
 - In memory
 
 ```dart
-final client = LibsqlClient(":memory:");
+final client = LibsqlClient.memory();
 ```
 
 - Local
@@ -28,13 +28,14 @@ final client = LibsqlClient(":memory:");
 ```dart
 final dir = await getApplicationCacheDirectory();
 final path = '${dir.path}/local.db';
-final client = LibsqlClient(path);
+final client = LibsqlClient.local(path);
 ```
 
 - Remote
 
 ```dart
-final client = LibsqlClient('<TURSO_OR_LIBSQL_URL>')..authToken = '<TOKEN>';
+final client = LibsqlClient.remote('<TURSO_OR_LIBSQL_URL>',
+    authToken: '<TOKEN>');
 ```
 
 - Embedded replica
@@ -42,11 +43,21 @@ final client = LibsqlClient('<TURSO_OR_LIBSQL_URL>')..authToken = '<TOKEN>';
 ```dart
 final dir = await getApplicationCacheDirectory();
 final path = '${dir.path}/local.db';
-final client = LibsqlClient(path)
-	..authToken = '<TOKEN>'
-	..syncUrl = '<TURSO_OR_LIBSQL_URL>'
-	..syncIntervalSeconds = 5
-	..readYourWrites = true;
+final client = LibsqlClient.replica(path,
+    syncUrl: '<TURSO_OR_LIBSQL_URL>',
+    authToken: '<TOKEN>',
+	syncIntervalSeconds: 5,
+    readYourWrites: true);
+```
+
+- Offline writes
+
+```dart
+final dir = await getApplicationCacheDirectory();
+final path = '${dir.path}/local.db';
+final client = LibsqlClient.offline(path,
+    syncUrl: '<TURSO_OR_LIBSQL_URL>',
+    authToken: '<TOKEN>');
 ```
 
 ### Connect
@@ -55,7 +66,7 @@ final client = LibsqlClient(path)
 await client.connect();
 ```
 
-### Call `sync` if necessary when using embedded replica
+### Call `sync` to sync remote changes to local replica when using embedded replica or offline writes
 
 ```dart
 await client.sync();
