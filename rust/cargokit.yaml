@@ -1,8 +1,8 @@
 cargo:
   debug:
-    toolchain: 1.82.0
+    toolchain: stable
   release:
-    toolchain: 1.82.0
+    toolchain: stable
 
 precompiled_binaries:
   # Uri prefix used when downloading precompiled binaries.
