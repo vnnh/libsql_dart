@@ -2,6 +2,7 @@ name: Precompile Binaries
 on:
   push:
     branches: [main]
+    # paths: [CHANGELOG.md]
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}
@@ -28,6 +29,9 @@ jobs:
       - name: Set up Android SDK
         if: (matrix.os == 'ubuntu-latest')
         uses: android-actions/setup-android@v2
+      - name: Install specific NDK
+        if: (matrix.os == 'ubuntu-latest')
+        run: sdkmanager --install "ndk;25.1.8937393"
       - name: Get flutter deps
         run: flutter pub get
       - name: Precompile
