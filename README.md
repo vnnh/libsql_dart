@@ -132,3 +132,8 @@ print(result);
 ## Demo
 
 ![Demo](https://raw.githubusercontent.com/dikatok/libsql_dart/main/assets/demo.gif)
+
+## Pre-requisites
+
+- `libsql` for obvious reason needs internet connection to perform most of it's functionalities, thus make sure required permission is handled/provided for each deployment target (android, ios, etc)
+- starting from version `0.7.0`, having `rustup` installed is no longer necessary for building your flutter app, it will be used to build the binary if available and will download the pre-built binaries instead otherwise.
