@@ -1,6 +1,7 @@
 name: Publish to pub.dev
 on:
   push:
+    branches: [main]
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}
@@ -9,13 +10,12 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
+      - name: "Checkout"
         uses: actions/checkout@main
-      - name: 'Publish libsql_dart'
+      - name: "Publish libsql_dart"
         uses: k-paxian/dart-package-publisher@master
         with:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           skipTests: true
           force: true
-          

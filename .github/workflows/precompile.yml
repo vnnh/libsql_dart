@@ -1,0 +1,46 @@
+name: Precompile Binaries
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+jobs:
+  precompile:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+      - name: Set up Android SDK
+        if: (matrix.os == 'ubuntu-latest')
+        uses: android-actions/setup-android@v2
+      - name: Get flutter deps
+        run: flutter pub get
+      - name: Precompile
+        if: (matrix.os == 'macOS-latest') || (matrix.os == 'windows-latest')
+        run: dart run build_tool precompile-binaries -v --manifest-dir=../../rust --repository=dikatok/libsql_dart
+        working-directory: libsql_dart/cargokit/build_tool
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRIVATE_KEY: ${{ secrets.CARGOKIT_PRIVATE_KEY }}
+      - name: Precompile (with Android)
+        if: (matrix.os == 'ubuntu-latest')
+        run: dart run build_tool precompile-binaries -v --manifest-dir=../../rust --repository=dikatok/libsql_dart --android-sdk-location=/usr/local/lib/android/sdk
+        working-directory: libsql_dart/cargokit/build_tool
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRIVATE_KEY: ${{ secrets.CARGOKIT_PRIVATE_KEY }}
