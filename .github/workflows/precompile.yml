@@ -33,14 +33,14 @@ jobs:
       - name: Precompile
         if: (matrix.os == 'macOS-latest') || (matrix.os == 'windows-latest')
         run: dart run build_tool precompile-binaries -v --manifest-dir=../../rust --repository=dikatok/libsql_dart
-        working-directory: libsql_dart/cargokit/build_tool
+        working-directory: cargokit/build_tool
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PRIVATE_KEY: ${{ secrets.CARGOKIT_PRIVATE_KEY }}
       - name: Precompile (with Android)
         if: (matrix.os == 'ubuntu-latest')
         run: dart run build_tool precompile-binaries -v --manifest-dir=../../rust --repository=dikatok/libsql_dart --android-sdk-location=/usr/local/lib/android/sdk
-        working-directory: libsql_dart/cargokit/build_tool
+        working-directory: cargokit/build_tool
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PRIVATE_KEY: ${{ secrets.CARGOKIT_PRIVATE_KEY }}
