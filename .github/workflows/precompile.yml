@@ -2,7 +2,7 @@ name: Precompile Binaries
 on:
   push:
     branches: [main]
-    # paths: [CHANGELOG.md]
+    paths: [CHANGELOG.md]
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}

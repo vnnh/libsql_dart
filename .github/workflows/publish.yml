@@ -1,7 +1,8 @@
-name: Publish to pub.dev
+name: Publish
 on:
   push:
     branches: [main]
+    paths: [CHANGELOG.md]
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}
