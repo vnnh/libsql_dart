@@ -1,3 +1,8 @@
+## 0.7.0
+
+- prebuilt binaries, enables installing without having `rustup` installed
+- bump dependencies, possible resulting in sync replica speed
+
 ## 0.6.0
 
 - Turso embedded replica v2
