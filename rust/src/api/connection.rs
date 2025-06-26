@@ -9,15 +9,22 @@ use crate::utils::{
 use async_std::path::Path;
 use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
 pub use libsql::TransactionBehavior;
-pub use libsql::{Connection, Database};
+pub use libsql::{Connection as InnerConnection, Database as InnerDatabase};
 
 #[frb(opaque)]
 pub struct LibsqlConnection {
-    pub connection: RustAutoOpaqueNom<Connection>,
-    pub database: RustAutoOpaqueNom<Database>,
+    connection: RustAutoOpaqueNom<InnerConnection>,
+    database: RustAutoOpaqueNom<InnerDatabase>,
 }
 
 impl LibsqlConnection {
+    pub fn new(connection: InnerConnection, database: InnerDatabase) -> LibsqlConnection {
+        LibsqlConnection {
+            connection: RustAutoOpaqueNom::new(connection),
+            database: RustAutoOpaqueNom::new(database),
+        }
+    }
+
     pub async fn sync(&mut self) {
         self.database.try_read().unwrap().sync().await.unwrap();
     }
@@ -38,9 +45,7 @@ impl LibsqlConnection {
             .prepare(&sql)
             .await
             .unwrap();
-        LibsqlStatement {
-            statement: RustAutoOpaqueNom::new(statement),
-        }
+        LibsqlStatement::new(statement)
     }
 
     pub async fn batch(&self, sql: String) {
@@ -70,9 +75,7 @@ impl LibsqlConnection {
             .transaction_with_behavior(behavior_)
             .await
             .unwrap();
-        LibsqlTransaction {
-            transaction: RustAutoOpaqueNom::new(transaction),
-        }
+        LibsqlTransaction::new(transaction)
     }
 
     pub async fn enable_extension(&self) {

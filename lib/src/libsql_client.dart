@@ -187,12 +187,12 @@ class LibsqlClient {
   ///
   /// # Returns
   /// Statement object
-  Future<$Statement> prepare(String sql) async {
+  Future<Statement> prepare(String sql) async {
     if (_connection == null) throw Exception('Database is not connected');
     final res = await _connection!.prepare(
       sql: sql,
     );
-    return $Statement(res);
+    return Statement(res);
   }
 
   /// Run a batch transaction
@@ -204,11 +204,10 @@ class LibsqlClient {
     await _connection!.batch(sql: sql);
   }
 
-  Future<$Transaction> transaction(
-      {LibsqlTransactionBehavior? behavior}) async {
+  Future<Transaction> transaction({LibsqlTransactionBehavior? behavior}) async {
     if (_connection == null) throw Exception('Database is not connected');
     final res = await _connection!.transaction(behavior: behavior);
-    return $Transaction(res);
+    return Transaction(res);
   }
 
   Future<void> loadExtension({required String path, String? entryPoint}) async {
@@ -228,6 +227,6 @@ class LibsqlClient {
 
   /// Close the database
   Future<void> dispose() async {
-    _connection?.connection.dispose();
+    _connection?.dispose();
   }
 }

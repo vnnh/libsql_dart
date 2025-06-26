@@ -1,5 +1,5 @@
 use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
-pub use libsql::Transaction;
+pub use libsql::Transaction as InnerTransaction;
 
 use crate::utils::{
     helpers::rows_to_query_result,
@@ -9,10 +9,16 @@ use crate::utils::{
 
 #[frb(opaque)]
 pub struct LibsqlTransaction {
-    pub transaction: RustAutoOpaqueNom<Transaction>,
+    transaction: RustAutoOpaqueNom<InnerTransaction>,
 }
 
 impl LibsqlTransaction {
+    pub fn new(transaction: InnerTransaction) -> LibsqlTransaction {
+        LibsqlTransaction {
+            transaction: RustAutoOpaqueNom::new(transaction),
+        }
+    }
+
     pub async fn query(&mut self, sql: String, parameters: Option<LibsqlParams>) -> QueryResult {
         // let params: libsql::params::Params = parameters
         //     .unwrap_or(LibsqlParams {
@@ -47,13 +53,13 @@ impl LibsqlTransaction {
         //             named: None,
         //         })
         //         .into();
-        //     let rows_affected = self
-        //         .transaction
-        //         .try_read()
-        //         .unwrap()
-        //         .execute(&sql, params)
-        //         .await
-        //         .unwrap();
+        // let rows_affected = self
+        //     .transaction
+        //     .try_read()
+        //     .unwrap()
+        //     .execute(&sql, params)
+        //     .await
+        //     .unwrap();
         ExecuteResult { rows_affected: 0 }
     }
 

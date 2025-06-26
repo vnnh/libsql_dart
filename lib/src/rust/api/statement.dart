@@ -9,20 +9,22 @@ import '../utils/result.dart';
 import '../utils/return_value.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerStatement>>
+abstract class InnerStatement implements RustOpaqueInterface {}
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlStatement>>
 abstract class LibsqlStatement implements RustOpaqueInterface {
-  Statement get statement;
-
-  set statement(Statement statement);
-
   Future<ExecuteResult> execute({LibsqlParams? parameters});
 
   Future<void> finalize();
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<LibsqlStatement> newInstance(
+          {required InnerStatement statement}) =>
+      RustLib.instance.api
+          .crateApiStatementLibsqlStatementNew(statement: statement);
 
   Future<QueryResult> query({LibsqlParams? parameters});
 
   Future<void> reset();
 }
-
-// Rust type: RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Statement>>
-abstract class Statement implements RustOpaqueInterface {}

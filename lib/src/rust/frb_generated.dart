@@ -74,7 +74,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => 432731430;
+  int get rustContentHash => -216189616;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -85,18 +85,6 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Connection crateApiConnectionLibsqlConnectionAutoAccessorGetConnection(
-      {required LibsqlConnection that});
-
-  Database crateApiConnectionLibsqlConnectionAutoAccessorGetDatabase(
-      {required LibsqlConnection that});
-
-  void crateApiConnectionLibsqlConnectionAutoAccessorSetConnection(
-      {required LibsqlConnection that, required Connection connection});
-
-  void crateApiConnectionLibsqlConnectionAutoAccessorSetDatabase(
-      {required LibsqlConnection that, required Database database});
-
   Future<void> crateApiConnectionLibsqlConnectionBatch(
       {required LibsqlConnection that, required String sql});
 
@@ -116,6 +104,9 @@ abstract class RustLibApi extends BaseApi {
       required String path,
       String? entryPoint});
 
+  Future<LibsqlConnection> crateApiConnectionLibsqlConnectionNew(
+      {required InnerConnection connection, required InnerDatabase database});
+
   Future<LibsqlStatement> crateApiConnectionLibsqlConnectionPrepare(
       {required LibsqlConnection that, required String sql});
 
@@ -130,29 +121,20 @@ abstract class RustLibApi extends BaseApi {
   Future<LibsqlTransaction> crateApiConnectionLibsqlConnectionTransaction(
       {required LibsqlConnection that, LibsqlTransactionBehavior? behavior});
 
-  Statement crateApiStatementLibsqlStatementAutoAccessorGetStatement(
-      {required LibsqlStatement that});
-
-  void crateApiStatementLibsqlStatementAutoAccessorSetStatement(
-      {required LibsqlStatement that, required Statement statement});
-
   Future<ExecuteResult> crateApiStatementLibsqlStatementExecute(
       {required LibsqlStatement that, LibsqlParams? parameters});
 
   Future<void> crateApiStatementLibsqlStatementFinalize(
       {required LibsqlStatement that});
 
+  Future<LibsqlStatement> crateApiStatementLibsqlStatementNew(
+      {required InnerStatement statement});
+
   Future<QueryResult> crateApiStatementLibsqlStatementQuery(
       {required LibsqlStatement that, LibsqlParams? parameters});
 
   Future<void> crateApiStatementLibsqlStatementReset(
       {required LibsqlStatement that});
-
-  Transaction crateApiTransactionLibsqlTransactionAutoAccessorGetTransaction(
-      {required LibsqlTransaction that});
-
-  void crateApiTransactionLibsqlTransactionAutoAccessorSetTransaction(
-      {required LibsqlTransaction that, required Transaction transaction});
 
   Future<void> crateApiTransactionLibsqlTransactionCommit(
       {required LibsqlTransaction that});
@@ -161,6 +143,9 @@ abstract class RustLibApi extends BaseApi {
       {required LibsqlTransaction that,
       required String sql,
       LibsqlParams? parameters});
+
+  Future<LibsqlTransaction> crateApiTransactionLibsqlTransactionNew(
+      {required InnerTransaction transaction});
 
   Future<QueryResult> crateApiTransactionLibsqlTransactionQuery(
       {required LibsqlTransaction that,
@@ -175,20 +160,40 @@ abstract class RustLibApi extends BaseApi {
   Future<void> crateApiLibsqlInitApp();
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Connection;
+      get rust_arc_increment_strong_count_InnerConnection;
 
   RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Connection;
+      get rust_arc_decrement_strong_count_InnerConnection;
 
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ConnectionPtr;
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_InnerConnectionPtr;
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Database;
+      get rust_arc_increment_strong_count_InnerDatabase;
 
   RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Database;
+      get rust_arc_decrement_strong_count_InnerDatabase;
 
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_DatabasePtr;
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_InnerDatabasePtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_InnerStatement;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_InnerStatement;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_InnerStatementPtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_InnerTransaction;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_InnerTransaction;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_InnerTransactionPtr;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_LibsqlConnection;
@@ -216,22 +221,6 @@ abstract class RustLibApi extends BaseApi {
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_LibsqlTransactionPtr;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Statement;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Statement;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_StatementPtr;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Transaction;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Transaction;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TransactionPtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -243,124 +232,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Connection crateApiConnectionLibsqlConnectionAutoAccessorGetConnection(
-      {required LibsqlConnection that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiConnectionLibsqlConnectionAutoAccessorGetConnectionConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiConnectionLibsqlConnectionAutoAccessorGetConnectionConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlConnection_auto_accessor_get_connection",
-            argNames: ["that"],
-          );
-
-  @override
-  Database crateApiConnectionLibsqlConnectionAutoAccessorGetDatabase(
-      {required LibsqlConnection that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiConnectionLibsqlConnectionAutoAccessorGetDatabaseConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiConnectionLibsqlConnectionAutoAccessorGetDatabaseConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlConnection_auto_accessor_get_database",
-            argNames: ["that"],
-          );
-
-  @override
-  void crateApiConnectionLibsqlConnectionAutoAccessorSetConnection(
-      {required LibsqlConnection that, required Connection connection}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-            that, serializer);
-        sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
-            connection, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiConnectionLibsqlConnectionAutoAccessorSetConnectionConstMeta,
-      argValues: [that, connection],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiConnectionLibsqlConnectionAutoAccessorSetConnectionConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlConnection_auto_accessor_set_connection",
-            argNames: ["that", "connection"],
-          );
-
-  @override
-  void crateApiConnectionLibsqlConnectionAutoAccessorSetDatabase(
-      {required LibsqlConnection that, required Database database}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-            that, serializer);
-        sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
-            database, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiConnectionLibsqlConnectionAutoAccessorSetDatabaseConstMeta,
-      argValues: [that, database],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiConnectionLibsqlConnectionAutoAccessorSetDatabaseConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlConnection_auto_accessor_set_database",
-            argNames: ["that", "database"],
-          );
-
-  @override
   Future<void> crateApiConnectionLibsqlConnectionBatch(
       {required LibsqlConnection that, required String sql}) {
     return handler.executeNormal(NormalTask(
@@ -370,7 +241,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(sql, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 5, port: port_);
+            funcId: 1, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -397,7 +268,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 6, port: port_);
+            funcId: 2, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -425,7 +296,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 7, port: port_);
+            funcId: 3, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -457,7 +328,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(sql, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 8, port: port_);
+            funcId: 4, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_execute_result,
@@ -488,7 +359,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(path, serializer);
         sse_encode_opt_String(entryPoint, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 9, port: port_);
+            funcId: 5, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -507,6 +378,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<LibsqlConnection> crateApiConnectionLibsqlConnectionNew(
+      {required InnerConnection connection, required InnerDatabase database}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
+            connection, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
+            database, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 6, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiConnectionLibsqlConnectionNewConstMeta,
+      argValues: [connection, database],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiConnectionLibsqlConnectionNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "LibsqlConnection_new",
+        argNames: ["connection", "database"],
+      );
+
+  @override
   Future<LibsqlStatement> crateApiConnectionLibsqlConnectionPrepare(
       {required LibsqlConnection that, required String sql}) {
     return handler.executeNormal(NormalTask(
@@ -516,7 +417,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(sql, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 10, port: port_);
+            funcId: 7, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -548,7 +449,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(sql, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 11, port: port_);
+            funcId: 8, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_query_result,
@@ -575,7 +476,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 12, port: port_);
+            funcId: 9, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -604,7 +505,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_opt_box_autoadd_libsql_transaction_behavior(
             behavior, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 13, port: port_);
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -624,65 +525,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Statement crateApiStatementLibsqlStatementAutoAccessorGetStatement(
-      {required LibsqlStatement that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiStatementLibsqlStatementAutoAccessorGetStatementConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiStatementLibsqlStatementAutoAccessorGetStatementConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlStatement_auto_accessor_get_statement",
-            argNames: ["that"],
-          );
-
-  @override
-  void crateApiStatementLibsqlStatementAutoAccessorSetStatement(
-      {required LibsqlStatement that, required Statement statement}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-            that, serializer);
-        sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-            statement, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiStatementLibsqlStatementAutoAccessorSetStatementConstMeta,
-      argValues: [that, statement],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiStatementLibsqlStatementAutoAccessorSetStatementConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlStatement_auto_accessor_set_statement",
-            argNames: ["that", "statement"],
-          );
-
-  @override
   Future<ExecuteResult> crateApiStatementLibsqlStatementExecute(
       {required LibsqlStatement that, LibsqlParams? parameters}) {
     return handler.executeNormal(NormalTask(
@@ -692,7 +534,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 16, port: port_);
+            funcId: 11, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_execute_result,
@@ -719,7 +561,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 17, port: port_);
+            funcId: 12, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -738,6 +580,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<LibsqlStatement> crateApiStatementLibsqlStatementNew(
+      {required InnerStatement statement}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
+            statement, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 13, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiStatementLibsqlStatementNewConstMeta,
+      argValues: [statement],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiStatementLibsqlStatementNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "LibsqlStatement_new",
+        argNames: ["statement"],
+      );
+
+  @override
   Future<QueryResult> crateApiStatementLibsqlStatementQuery(
       {required LibsqlStatement that, LibsqlParams? parameters}) {
     return handler.executeNormal(NormalTask(
@@ -747,7 +617,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 18, port: port_);
+            funcId: 14, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_query_result,
@@ -774,7 +644,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 19, port: port_);
+            funcId: 15, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -793,65 +663,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Transaction crateApiTransactionLibsqlTransactionAutoAccessorGetTransaction(
-      {required LibsqlTransaction that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiTransactionLibsqlTransactionAutoAccessorGetTransactionConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiTransactionLibsqlTransactionAutoAccessorGetTransactionConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlTransaction_auto_accessor_get_transaction",
-            argNames: ["that"],
-          );
-
-  @override
-  void crateApiTransactionLibsqlTransactionAutoAccessorSetTransaction(
-      {required LibsqlTransaction that, required Transaction transaction}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
-            that, serializer);
-        sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-            transaction, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiTransactionLibsqlTransactionAutoAccessorSetTransactionConstMeta,
-      argValues: [that, transaction],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiTransactionLibsqlTransactionAutoAccessorSetTransactionConstMeta =>
-          const TaskConstMeta(
-            debugName: "LibsqlTransaction_auto_accessor_set_transaction",
-            argNames: ["that", "transaction"],
-          );
-
-  @override
   Future<void> crateApiTransactionLibsqlTransactionCommit(
       {required LibsqlTransaction that}) {
     return handler.executeNormal(NormalTask(
@@ -860,7 +671,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 22, port: port_);
+            funcId: 16, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -891,7 +702,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(sql, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 23, port: port_);
+            funcId: 17, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_execute_result,
@@ -910,6 +721,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<LibsqlTransaction> crateApiTransactionLibsqlTransactionNew(
+      {required InnerTransaction transaction}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
+            transaction, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 18, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiTransactionLibsqlTransactionNewConstMeta,
+      argValues: [transaction],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiTransactionLibsqlTransactionNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "LibsqlTransaction_new",
+        argNames: ["transaction"],
+      );
+
+  @override
   Future<QueryResult> crateApiTransactionLibsqlTransactionQuery(
       {required LibsqlTransaction that,
       required String sql,
@@ -922,7 +761,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(sql, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 24, port: port_);
+            funcId: 19, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_query_result,
@@ -949,7 +788,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 25, port: port_);
+            funcId: 20, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -974,7 +813,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_connect_args(args, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 26, port: port_);
+            funcId: 21, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -998,7 +837,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 27, port: port_);
+            funcId: 22, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1016,20 +855,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Connection => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection;
+      get rust_arc_increment_strong_count_InnerConnection => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection;
 
   RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Connection => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection;
+      get rust_arc_decrement_strong_count_InnerConnection => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection;
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Database => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase;
+      get rust_arc_increment_strong_count_InnerDatabase => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase;
 
   RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Database => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase;
+      get rust_arc_decrement_strong_count_InnerDatabase => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_InnerStatement => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_InnerStatement => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_InnerTransaction => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_InnerTransaction => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_LibsqlConnection => wire
@@ -1055,56 +910,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get rust_arc_decrement_strong_count_LibsqlTransaction => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction;
 
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Statement => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Statement => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Transaction => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Transaction => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction;
-
   @protected
-  Connection
-      dco_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
+  InnerConnection
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
-        raw);
+    return InnerConnectionImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
-  Database
-      dco_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
+  InnerDatabase
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
-        raw);
+    return InnerDatabaseImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
-  Statement
-      dco_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
+  InnerStatement
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-        raw);
+    return InnerStatementImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
-  Transaction
-      dco_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
+  InnerTransaction
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-        raw);
+    return InnerTransactionImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1164,22 +999,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  LibsqlStatement
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return LibsqlStatementImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  LibsqlTransaction
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return LibsqlTransactionImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   Map<String, LibsqlReturnValue> dco_decode_Map_String_libsql_return_value_None(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -1197,19 +1016,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Connection
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
+  InnerConnection
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return ConnectionImpl.frbInternalDcoDecode(raw as List<dynamic>);
+    return InnerConnectionImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
-  Database
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
+  InnerDatabase
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return DatabaseImpl.frbInternalDcoDecode(raw as List<dynamic>);
+    return InnerDatabaseImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  InnerStatement
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return InnerStatementImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  InnerTransaction
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return InnerTransactionImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1234,22 +1069,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return LibsqlTransactionImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Statement
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return StatementImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Transaction
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return TransactionImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1590,47 +1409,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Connection
-      sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
+  InnerConnection
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner =
-        sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
-            deserializer);
-    return inner;
+    return InnerConnectionImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
-  Database
-      sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
+  InnerDatabase
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner =
-        sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
-            deserializer);
-    return inner;
+    return InnerDatabaseImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
-  Statement
-      sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
+  InnerStatement
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner =
-        sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-            deserializer);
-    return inner;
+    return InnerStatementImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
-  Transaction
-      sse_decode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
+  InnerTransaction
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner =
-        sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-            deserializer);
-    return inner;
+    return InnerTransactionImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
@@ -1697,24 +1508,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  LibsqlStatement
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return LibsqlStatementImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  LibsqlTransaction
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return LibsqlTransactionImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   Map<String, LibsqlReturnValue> sse_decode_Map_String_libsql_return_value_None(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1731,20 +1524,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Connection
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
+  InnerConnection
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return ConnectionImpl.frbInternalSseDecode(
+    return InnerConnectionImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
-  Database
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
+  InnerDatabase
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return DatabaseImpl.frbInternalSseDecode(
+    return InnerDatabaseImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  InnerStatement
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return InnerStatementImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  InnerTransaction
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return InnerTransactionImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -1772,24 +1583,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return LibsqlTransactionImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Statement
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return StatementImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Transaction
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return TransactionImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -2192,38 +1985,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
-          Connection self, SseSerializer serializer) {
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
+          InnerConnection self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
-        self, serializer);
+    sse_encode_usize(
+        (self as InnerConnectionImpl).frbInternalSseEncode(move: true),
+        serializer);
   }
 
   @protected
   void
-      sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
-          Database self, SseSerializer serializer) {
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
+          InnerDatabase self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
-        self, serializer);
+    sse_encode_usize(
+        (self as InnerDatabaseImpl).frbInternalSseEncode(move: true),
+        serializer);
   }
 
   @protected
   void
-      sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-          Statement self, SseSerializer serializer) {
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
+          InnerStatement self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-        self, serializer);
+    sse_encode_usize(
+        (self as InnerStatementImpl).frbInternalSseEncode(move: true),
+        serializer);
   }
 
   @protected
   void
-      sse_encode_AutoExplicit_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-          Transaction self, SseSerializer serializer) {
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
+          InnerTransaction self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-        self, serializer);
+    sse_encode_usize(
+        (self as InnerTransactionImpl).frbInternalSseEncode(move: true),
+        serializer);
   }
 
   @protected
@@ -2297,26 +2094,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          LibsqlStatement self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as LibsqlStatementImpl).frbInternalSseEncode(move: false),
-        serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
-          LibsqlTransaction self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as LibsqlTransactionImpl).frbInternalSseEncode(move: false),
-        serializer);
-  }
-
-  @protected
   void sse_encode_Map_String_libsql_return_value_None(
       Map<String, LibsqlReturnValue> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -2334,20 +2111,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnection(
-          Connection self, SseSerializer serializer) {
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerConnection(
+          InnerConnection self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
-        (self as ConnectionImpl).frbInternalSseEncode(move: null), serializer);
+        (self as InnerConnectionImpl).frbInternalSseEncode(move: null),
+        serializer);
   }
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase(
-          Database self, SseSerializer serializer) {
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerDatabase(
+          InnerDatabase self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
-        (self as DatabaseImpl).frbInternalSseEncode(move: null), serializer);
+        (self as InnerDatabaseImpl).frbInternalSseEncode(move: null),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerStatement(
+          InnerStatement self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as InnerStatementImpl).frbInternalSseEncode(move: null),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInnerTransaction(
+          InnerTransaction self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as InnerTransactionImpl).frbInternalSseEncode(move: null),
+        serializer);
   }
 
   @protected
@@ -2378,24 +2177,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_usize(
         (self as LibsqlTransactionImpl).frbInternalSseEncode(move: null),
         serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerStatement(
-          Statement self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as StatementImpl).frbInternalSseEncode(move: null), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransaction(
-          Transaction self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as TransactionImpl).frbInternalSseEncode(move: null), serializer);
   }
 
   @protected
@@ -2743,42 +2524,83 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 }
 
 @sealed
-class ConnectionImpl extends RustOpaque implements Connection {
+class InnerConnectionImpl extends RustOpaque implements InnerConnection {
   // Not to be used by end users
-  ConnectionImpl.frbInternalDcoDecode(List<dynamic> wire)
+  InnerConnectionImpl.frbInternalDcoDecode(List<dynamic> wire)
       : super.frbInternalDcoDecode(wire, _kStaticData);
 
   // Not to be used by end users
-  ConnectionImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+  InnerConnectionImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
       : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
 
   static final _kStaticData = RustArcStaticData(
     rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Connection,
+        RustLib.instance.api.rust_arc_increment_strong_count_InnerConnection,
     rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Connection,
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerConnection,
     rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_ConnectionPtr,
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerConnectionPtr,
   );
 }
 
 @sealed
-class DatabaseImpl extends RustOpaque implements Database {
+class InnerDatabaseImpl extends RustOpaque implements InnerDatabase {
   // Not to be used by end users
-  DatabaseImpl.frbInternalDcoDecode(List<dynamic> wire)
+  InnerDatabaseImpl.frbInternalDcoDecode(List<dynamic> wire)
       : super.frbInternalDcoDecode(wire, _kStaticData);
 
   // Not to be used by end users
-  DatabaseImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+  InnerDatabaseImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
       : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
 
   static final _kStaticData = RustArcStaticData(
     rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Database,
+        RustLib.instance.api.rust_arc_increment_strong_count_InnerDatabase,
     rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Database,
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerDatabase,
     rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_DatabasePtr,
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerDatabasePtr,
+  );
+}
+
+@sealed
+class InnerStatementImpl extends RustOpaque implements InnerStatement {
+  // Not to be used by end users
+  InnerStatementImpl.frbInternalDcoDecode(List<dynamic> wire)
+      : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  InnerStatementImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_InnerStatement,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerStatement,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerStatementPtr,
+  );
+}
+
+@sealed
+class InnerTransactionImpl extends RustOpaque implements InnerTransaction {
+  // Not to be used by end users
+  InnerTransactionImpl.frbInternalDcoDecode(List<dynamic> wire)
+      : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  InnerTransactionImpl.frbInternalSseDecode(
+      BigInt ptr, int externalSizeOnNative)
+      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_InnerTransaction,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_InnerTransaction,
+    rustArcDecrementStrongCountPtr: RustLib
+        .instance.api.rust_arc_decrement_strong_count_InnerTransactionPtr,
   );
 }
 
@@ -2801,24 +2623,6 @@ class LibsqlConnectionImpl extends RustOpaque implements LibsqlConnection {
     rustArcDecrementStrongCountPtr: RustLib
         .instance.api.rust_arc_decrement_strong_count_LibsqlConnectionPtr,
   );
-
-  Connection get connection => RustLib.instance.api
-          .crateApiConnectionLibsqlConnectionAutoAccessorGetConnection(
-        that: this,
-      );
-
-  Database get database => RustLib.instance.api
-          .crateApiConnectionLibsqlConnectionAutoAccessorGetDatabase(
-        that: this,
-      );
-
-  set connection(Connection connection) => RustLib.instance.api
-      .crateApiConnectionLibsqlConnectionAutoAccessorSetConnection(
-          that: this, connection: connection);
-
-  set database(Database database) => RustLib.instance.api
-      .crateApiConnectionLibsqlConnectionAutoAccessorSetDatabase(
-          that: this, database: database);
 
   Future<void> batch({required String sql}) => RustLib.instance.api
       .crateApiConnectionLibsqlConnectionBatch(that: this, sql: sql);
@@ -2879,15 +2683,6 @@ class LibsqlStatementImpl extends RustOpaque implements LibsqlStatement {
         RustLib.instance.api.rust_arc_decrement_strong_count_LibsqlStatementPtr,
   );
 
-  Statement get statement => RustLib.instance.api
-          .crateApiStatementLibsqlStatementAutoAccessorGetStatement(
-        that: this,
-      );
-
-  set statement(Statement statement) => RustLib.instance.api
-      .crateApiStatementLibsqlStatementAutoAccessorSetStatement(
-          that: this, statement: statement);
-
   Future<ExecuteResult> execute({LibsqlParams? parameters}) =>
       RustLib.instance.api.crateApiStatementLibsqlStatementExecute(
           that: this, parameters: parameters);
@@ -2927,15 +2722,6 @@ class LibsqlTransactionImpl extends RustOpaque implements LibsqlTransaction {
         .instance.api.rust_arc_decrement_strong_count_LibsqlTransactionPtr,
   );
 
-  Transaction get transaction => RustLib.instance.api
-          .crateApiTransactionLibsqlTransactionAutoAccessorGetTransaction(
-        that: this,
-      );
-
-  set transaction(Transaction transaction) => RustLib.instance.api
-      .crateApiTransactionLibsqlTransactionAutoAccessorSetTransaction(
-          that: this, transaction: transaction);
-
   Future<void> commit() =>
       RustLib.instance.api.crateApiTransactionLibsqlTransactionCommit(
         that: this,
@@ -2954,44 +2740,4 @@ class LibsqlTransactionImpl extends RustOpaque implements LibsqlTransaction {
       RustLib.instance.api.crateApiTransactionLibsqlTransactionRollback(
         that: this,
       );
-}
-
-@sealed
-class StatementImpl extends RustOpaque implements Statement {
-  // Not to be used by end users
-  StatementImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  StatementImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Statement,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Statement,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_StatementPtr,
-  );
-}
-
-@sealed
-class TransactionImpl extends RustOpaque implements Transaction {
-  // Not to be used by end users
-  TransactionImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  TransactionImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Transaction,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Transaction,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_TransactionPtr,
-  );
 }

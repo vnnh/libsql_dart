@@ -9,24 +9,26 @@ import '../utils/result.dart';
 import '../utils/return_value.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerTransaction>>
+abstract class InnerTransaction implements RustOpaqueInterface {}
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlTransaction>>
 abstract class LibsqlTransaction implements RustOpaqueInterface {
-  Transaction get transaction;
-
-  set transaction(Transaction transaction);
-
   Future<void> commit();
 
   Future<ExecuteResult> execute(
       {required String sql, LibsqlParams? parameters});
 
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<LibsqlTransaction> newInstance(
+          {required InnerTransaction transaction}) =>
+      RustLib.instance.api
+          .crateApiTransactionLibsqlTransactionNew(transaction: transaction);
+
   Future<QueryResult> query({required String sql, LibsqlParams? parameters});
 
   Future<void> rollback();
 }
-
-// Rust type: RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Transaction>>
-abstract class Transaction implements RustOpaqueInterface {}
 
 enum LibsqlTransactionBehavior {
   deferred_,

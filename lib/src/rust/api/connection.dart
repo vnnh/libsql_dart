@@ -11,22 +11,14 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'statement.dart';
 import 'transaction.dart';
 
-// Rust type: RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Connection>>
-abstract class Connection implements RustOpaqueInterface {}
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerConnection>>
+abstract class InnerConnection implements RustOpaqueInterface {}
 
-// Rust type: RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Database>>
-abstract class Database implements RustOpaqueInterface {}
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerDatabase>>
+abstract class InnerDatabase implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlConnection>>
 abstract class LibsqlConnection implements RustOpaqueInterface {
-  Connection get connection;
-
-  Database get database;
-
-  set connection(Connection connection);
-
-  set database(Database database);
-
   Future<void> batch({required String sql});
 
   Future<void> disableExtension();
@@ -37,6 +29,13 @@ abstract class LibsqlConnection implements RustOpaqueInterface {
       {required String sql, LibsqlParams? parameters});
 
   Future<void> loadExtension({required String path, String? entryPoint});
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<LibsqlConnection> newInstance(
+          {required InnerConnection connection,
+          required InnerDatabase database}) =>
+      RustLib.instance.api.crateApiConnectionLibsqlConnectionNew(
+          connection: connection, database: database);
 
   Future<LibsqlStatement> prepare({required String sql});
 

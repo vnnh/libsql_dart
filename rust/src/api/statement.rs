@@ -1,5 +1,6 @@
 use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
-pub use libsql::Statement;
+#[frb(name = "_Statement")]
+pub use libsql::Statement as InnerStatement;
 
 use crate::utils::{
     helpers::rows_to_query_result,
@@ -9,10 +10,16 @@ use crate::utils::{
 
 #[frb(opaque)]
 pub struct LibsqlStatement {
-    pub statement: RustAutoOpaqueNom<Statement>,
+    statement: RustAutoOpaqueNom<InnerStatement>,
 }
 
 impl LibsqlStatement {
+    pub fn new(statement: InnerStatement) -> LibsqlStatement {
+        LibsqlStatement {
+            statement: RustAutoOpaqueNom::new(statement),
+        }
+    }
+
     pub async fn finalize(&mut self) {
         self.statement.try_write().unwrap().finalize();
     }

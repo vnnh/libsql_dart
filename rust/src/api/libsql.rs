@@ -1,7 +1,6 @@
 use flutter_rust_bridge::RustAutoOpaqueNom;
 use libsql::Builder;
 use std::time::Duration;
-extern crate lazy_static;
 
 pub use super::connection::LibsqlConnection;
 
@@ -104,8 +103,5 @@ pub async fn connect(args: ConnectArgs) -> LibsqlConnection {
     }
     .unwrap();
     let connection = database.connect().unwrap();
-    LibsqlConnection {
-        connection: RustAutoOpaqueNom::new(connection),
-        database: RustAutoOpaqueNom::new(database),
-    }
+    LibsqlConnection::new(connection, database)
 }

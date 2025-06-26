@@ -3,19 +3,19 @@ import 'package:libsql_dart/src/rust/api/api.dart';
 import 'package:libsql_dart/src/rust/utils/params.dart';
 
 // This is for internal only
-class $Statement {
-  $Statement(this.statement);
+class Statement {
+  Statement(this.inner);
 
-  final LibsqlStatement statement;
+  final LibsqlStatement inner;
 
   // Finalize statement
   Future<void> finalize() async {
-    statement.finalize();
+    inner.finalize();
   }
 
   // Reset statement
   Future<void> reset() async {
-    statement.reset();
+    inner.reset();
   }
 
   /// Query the statement, you can provide either named or positional parameters
@@ -30,7 +30,7 @@ class $Statement {
     Map<String, dynamic>? named,
     List<dynamic>? positional,
   }) async {
-    final res = await statement.query(
+    final res = await inner.query(
       parameters: LibsqlParams(
         named: named?.map((k, v) => MapEntry(k, toLibsqlValue(v))),
         positional: positional?.map(toLibsqlValue).toList(),
@@ -69,7 +69,7 @@ class $Statement {
     Map<String, dynamic>? named,
     List<dynamic>? positional,
   }) async {
-    final res = await statement.execute(
+    final res = await inner.execute(
       parameters: LibsqlParams(
         named: named?.map((k, v) => MapEntry(k, toLibsqlValue(v))),
         positional: positional?.map(toLibsqlValue).toList(),
