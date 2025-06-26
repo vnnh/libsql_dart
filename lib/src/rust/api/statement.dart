@@ -9,38 +9,20 @@ import '../utils/result.dart';
 import '../utils/return_value.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class LibsqlStatement {
-  final String statementId;
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlStatement>>
+abstract class LibsqlStatement implements RustOpaqueInterface {
+  Statement get statement;
 
-  const LibsqlStatement({
-    required this.statementId,
-  });
+  set statement(Statement statement);
 
-  Future<ExecuteResult> execute({LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiStatementLibsqlStatementExecute(
-          that: this, parameters: parameters);
+  Future<ExecuteResult> execute({LibsqlParams? parameters});
 
-  Future<void> finalize() =>
-      RustLib.instance.api.crateApiStatementLibsqlStatementFinalize(
-        that: this,
-      );
+  Future<void> finalize();
 
-  Future<QueryResult> query({LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiStatementLibsqlStatementQuery(
-          that: this, parameters: parameters);
+  Future<QueryResult> query({LibsqlParams? parameters});
 
-  Future<void> reset() =>
-      RustLib.instance.api.crateApiStatementLibsqlStatementReset(
-        that: this,
-      );
-
-  @override
-  int get hashCode => statementId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LibsqlStatement &&
-          runtimeType == other.runtimeType &&
-          statementId == other.statementId;
+  Future<void> reset();
 }
+
+// Rust type: RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Statement>>
+abstract class Statement implements RustOpaqueInterface {}

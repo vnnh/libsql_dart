@@ -1,23 +1,12 @@
-use async_std::sync::Mutex;
-use libsql::{Builder, Connection, Database, Statement, Transaction};
-use std::{collections::HashMap, time::Duration};
-use uuid::Uuid;
+use flutter_rust_bridge::RustAutoOpaqueNom;
+use libsql::Builder;
+use std::time::Duration;
 extern crate lazy_static;
-use crate::utils::result::ConnectResult;
 
-use super::connection::LibsqlConnection;
-
-lazy_static::lazy_static! {
-   pub static ref DATABASE_REGISTRY: Mutex<HashMap<String, (Database, Connection)>> = Mutex::new(HashMap::new());
-   pub static ref STATEMENT_REGISTRY: Mutex<HashMap<String, Statement>> = Mutex::new(HashMap::new());
-   pub static ref TRANSACTION_REGISTRY: Mutex<HashMap<String, Transaction>> = Mutex::new(HashMap::new());
-}
+pub use super::connection::LibsqlConnection;
 
 #[flutter_rust_bridge::frb(init)]
 pub async fn init_app() {
-    TRANSACTION_REGISTRY.lock().await.clear();
-    STATEMENT_REGISTRY.lock().await.clear();
-    DATABASE_REGISTRY.lock().await.clear();
     flutter_rust_bridge::setup_default_user_utils();
 }
 
@@ -38,7 +27,7 @@ pub struct ConnectArgs {
     pub offline: Option<bool>,
 }
 
-pub async fn connect(args: ConnectArgs) -> ConnectResult {
+pub async fn connect(args: ConnectArgs) -> LibsqlConnection {
     let database = if args.sync_url.is_some() && args.offline.is_some_and(|offline| offline) {
         let connector = hyper_rustls::HttpsConnectorBuilder::new()
             .with_webpki_roots()
@@ -114,13 +103,9 @@ pub async fn connect(args: ConnectArgs) -> ConnectResult {
         builder.build().await
     }
     .unwrap();
-    let conn = database.connect().unwrap();
-    let db_id = Uuid::new_v4().to_string();
-    DATABASE_REGISTRY
-        .lock()
-        .await
-        .insert(db_id.clone(), (database, conn));
-    ConnectResult {
-        connection: LibsqlConnection { db_id },
+    let connection = database.connect().unwrap();
+    LibsqlConnection {
+        connection: RustAutoOpaqueNom::new(connection),
+        database: RustAutoOpaqueNom::new(database),
     }
 }

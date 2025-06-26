@@ -91,7 +91,7 @@ class LibsqlClient {
     if (!RustLib.instance.initialized) {
       await RustLib.init();
     }
-    final res = await libsql.connect(
+    _connection = await libsql.connect(
       args: ConnectArgs(
         url: url,
         authToken: authToken,
@@ -105,7 +105,6 @@ class LibsqlClient {
         offline: offline,
       ),
     );
-    _connection = res.connection;
   }
 
   // Sync the embedded replica
@@ -188,12 +187,12 @@ class LibsqlClient {
   ///
   /// # Returns
   /// Statement object
-  Future<Statement> prepare(String sql) async {
+  Future<$Statement> prepare(String sql) async {
     if (_connection == null) throw Exception('Database is not connected');
     final res = await _connection!.prepare(
       sql: sql,
     );
-    return Statement(res.statement);
+    return $Statement(res);
   }
 
   /// Run a batch transaction
@@ -205,10 +204,11 @@ class LibsqlClient {
     await _connection!.batch(sql: sql);
   }
 
-  Future<Transaction> transaction({LibsqlTransactionBehavior? behavior}) async {
+  Future<$Transaction> transaction(
+      {LibsqlTransactionBehavior? behavior}) async {
     if (_connection == null) throw Exception('Database is not connected');
     final res = await _connection!.transaction(behavior: behavior);
-    return Transaction(res.transaction);
+    return $Transaction(res);
   }
 
   Future<void> loadExtension({required String path, String? entryPoint}) async {
@@ -228,6 +228,6 @@ class LibsqlClient {
 
   /// Close the database
   Future<void> dispose() async {
-    _connection?.close();
+    _connection?.connection.dispose();
   }
 }

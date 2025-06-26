@@ -9,42 +9,24 @@ import '../utils/result.dart';
 import '../utils/return_value.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class LibsqlTransaction {
-  final String transactionId;
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlTransaction>>
+abstract class LibsqlTransaction implements RustOpaqueInterface {
+  Transaction get transaction;
 
-  const LibsqlTransaction({
-    required this.transactionId,
-  });
+  set transaction(Transaction transaction);
 
-  Future<TransactionCommitResult> commit() =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionCommit(
-        that: this,
-      );
+  Future<void> commit();
 
   Future<ExecuteResult> execute(
-          {required String sql, LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionExecute(
-          that: this, sql: sql, parameters: parameters);
+      {required String sql, LibsqlParams? parameters});
 
-  Future<QueryResult> query({required String sql, LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionQuery(
-          that: this, sql: sql, parameters: parameters);
+  Future<QueryResult> query({required String sql, LibsqlParams? parameters});
 
-  Future<TransactionRollbackResult> rollback() =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionRollback(
-        that: this,
-      );
-
-  @override
-  int get hashCode => transactionId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LibsqlTransaction &&
-          runtimeType == other.runtimeType &&
-          transactionId == other.transactionId;
+  Future<void> rollback();
 }
+
+// Rust type: RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Transaction>>
+abstract class Transaction implements RustOpaqueInterface {}
 
 enum LibsqlTransactionBehavior {
   deferred_,

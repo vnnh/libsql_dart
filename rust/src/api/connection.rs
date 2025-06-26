@@ -1,63 +1,61 @@
 use super::{
-    libsql::{DATABASE_REGISTRY, STATEMENT_REGISTRY, TRANSACTION_REGISTRY},
     statement::LibsqlStatement,
     transaction::{LibsqlTransaction, LibsqlTransactionBehavior},
 };
 use crate::utils::{
     params::LibsqlParams,
-    result::{
-        BatchResult, ExecuteResult, PrepareResult, QueryResult, SyncResult, TransactionResult,
-    },
+    result::{ExecuteResult, QueryResult},
 };
 use async_std::path::Path;
+use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
 pub use libsql::TransactionBehavior;
-use uuid::Uuid;
+pub use libsql::{Connection, Database};
 
+#[frb(opaque)]
 pub struct LibsqlConnection {
-    pub db_id: String,
+    pub connection: RustAutoOpaqueNom<Connection>,
+    pub database: RustAutoOpaqueNom<Database>,
 }
 
 impl LibsqlConnection {
-    pub async fn sync(&self) -> SyncResult {
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (db, _) = guard.get(&self.db_id).unwrap();
-        db.sync().await.unwrap();
-        SyncResult {}
+    pub async fn sync(&mut self) {
+        self.database.try_read().unwrap().sync().await.unwrap();
     }
 
     pub async fn query(&self, sql: String, parameters: Option<LibsqlParams>) -> QueryResult {
-        self.prepare(sql).await.statement.query(parameters).await
+        self.prepare(sql).await.query(parameters).await
     }
 
     pub async fn execute(&self, sql: String, parameters: Option<LibsqlParams>) -> ExecuteResult {
-        self.prepare(sql).await.statement.execute(parameters).await
+        self.prepare(sql).await.execute(parameters).await
     }
 
-    pub async fn prepare(&self, sql: String) -> PrepareResult {
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (_, conn) = guard.get(&self.db_id).unwrap();
-        let statement = conn.prepare(&sql).await.unwrap();
-        let statement_id = Uuid::new_v4().to_string();
-        STATEMENT_REGISTRY
-            .lock()
+    pub async fn prepare(&self, sql: String) -> LibsqlStatement {
+        let statement = self
+            .connection
+            .try_read()
+            .unwrap()
+            .prepare(&sql)
             .await
-            .insert(statement_id.clone(), statement);
-        PrepareResult {
-            statement: LibsqlStatement { statement_id },
+            .unwrap();
+        LibsqlStatement {
+            statement: RustAutoOpaqueNom::new(statement),
         }
     }
 
-    pub async fn batch(&self, sql: String) -> BatchResult {
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (_, conn) = guard.get(&self.db_id).unwrap();
-        conn.execute_batch(&sql).await.unwrap();
-        BatchResult {}
+    pub async fn batch(&self, sql: String) {
+        self.connection
+            .try_read()
+            .unwrap()
+            .execute_batch(&sql)
+            .await
+            .unwrap();
     }
 
     pub async fn transaction(
         &self,
         behavior: Option<LibsqlTransactionBehavior>,
-    ) -> TransactionResult {
+    ) -> LibsqlTransaction {
         let behavior_ = match behavior {
             Some(LibsqlTransactionBehavior::Deferred) => TransactionBehavior::Deferred,
             Some(LibsqlTransactionBehavior::Exclusive) => TransactionBehavior::Exclusive,
@@ -65,40 +63,39 @@ impl LibsqlConnection {
             Some(LibsqlTransactionBehavior::ReadOnly) => TransactionBehavior::ReadOnly,
             _ => TransactionBehavior::Deferred,
         };
-
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (_, conn) = guard.get(&self.db_id).unwrap();
-        let transaction = conn.transaction_with_behavior(behavior_).await.unwrap();
-        let transaction_id = Uuid::new_v4().to_string();
-        TRANSACTION_REGISTRY
-            .lock()
+        let transaction = self
+            .connection
+            .try_read()
+            .unwrap()
+            .transaction_with_behavior(behavior_)
             .await
-            .insert(transaction_id.clone(), transaction);
-        TransactionResult {
-            transaction: LibsqlTransaction { transaction_id },
+            .unwrap();
+        LibsqlTransaction {
+            transaction: RustAutoOpaqueNom::new(transaction),
         }
     }
 
     pub async fn enable_extension(&self) {
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (_, conn) = guard.get(&self.db_id).unwrap();
-        conn.load_extension_enable().unwrap();
-    }
-
-    pub async fn disable_extension(&self) {
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (_, conn) = guard.get(&self.db_id).unwrap();
-        conn.load_extension_disable().unwrap();
-    }
-
-    pub async fn load_extension(&self, path: String, entry_point: Option<String>) {
-        let guard = DATABASE_REGISTRY.lock().await;
-        let (_, conn) = guard.get(&self.db_id).unwrap();
-        conn.load_extension(Path::new(&path), entry_point.as_deref())
+        self.connection
+            .try_read()
+            .unwrap()
+            .load_extension_enable()
             .unwrap();
     }
 
-    pub async fn close(&self) {
-        DATABASE_REGISTRY.lock().await.remove(&self.db_id).unwrap();
+    pub async fn disable_extension(&self) {
+        self.connection
+            .try_read()
+            .unwrap()
+            .load_extension_disable()
+            .unwrap();
+    }
+
+    pub async fn load_extension(&self, path: String, entry_point: Option<String>) {
+        self.connection
+            .try_read()
+            .unwrap()
+            .load_extension(Path::new(&path), entry_point.as_deref())
+            .unwrap();
     }
 }

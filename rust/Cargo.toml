@@ -9,9 +9,12 @@ crate-type = ["cdylib", "staticlib"]
 async-std = "1.13.1"
 flutter_rust_bridge = "=2.10.0"
 futures = "0.3.31"
-hyper-rustls = {version = "0.25", features = ["webpki-roots"]}
+hyper-rustls = { version = "0.25", features = ["webpki-roots"] }
 lazy_static = "1.5.0"
 libsql = "0.9.11"
 log = "0.4.27"
 tokio = "1.45.1"
 uuid = "1.17.0"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

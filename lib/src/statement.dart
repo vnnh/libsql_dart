@@ -3,8 +3,8 @@ import 'package:libsql_dart/src/rust/api/api.dart';
 import 'package:libsql_dart/src/rust/utils/params.dart';
 
 // This is for internal only
-class Statement {
-  Statement(this.statement);
+class $Statement {
+  $Statement(this.statement);
 
   final LibsqlStatement statement;
 
