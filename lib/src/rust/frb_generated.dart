@@ -473,7 +473,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 9, port: port_);
@@ -530,7 +530,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
             that, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -558,7 +558,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 12, port: port_);
@@ -613,7 +613,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
             that, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -641,7 +641,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 15, port: port_);
@@ -697,7 +697,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
             that, serializer);
         sse_encode_String(sql, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
@@ -756,7 +756,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
             that, serializer);
         sse_encode_String(sql, serializer);
         sse_encode_opt_box_autoadd_libsql_params(parameters, serializer);
@@ -967,22 +967,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  LibsqlConnection
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return LibsqlConnectionImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  LibsqlStatement
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return LibsqlStatementImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   LibsqlTransaction
       dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           dynamic raw) {
@@ -996,6 +980,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return LibsqlConnectionImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  LibsqlStatement
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return LibsqlStatementImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  LibsqlTransaction
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return LibsqlTransactionImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1472,24 +1472,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  LibsqlConnection
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return LibsqlConnectionImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  LibsqlStatement
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return LibsqlStatementImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   LibsqlTransaction
       sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           SseDeserializer deserializer) {
@@ -1504,6 +1486,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return LibsqlConnectionImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  LibsqlStatement
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return LibsqlStatementImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  LibsqlTransaction
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return LibsqlTransactionImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -2055,26 +2055,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-          LibsqlConnection self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as LibsqlConnectionImpl).frbInternalSseEncode(move: false),
-        serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          LibsqlStatement self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as LibsqlStatementImpl).frbInternalSseEncode(move: false),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           LibsqlTransaction self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -2090,6 +2070,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as LibsqlConnectionImpl).frbInternalSseEncode(move: false),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+          LibsqlStatement self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as LibsqlStatementImpl).frbInternalSseEncode(move: false),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
+          LibsqlTransaction self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as LibsqlTransactionImpl).frbInternalSseEncode(move: false),
         serializer);
   }
 

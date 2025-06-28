@@ -25,7 +25,7 @@ impl LibsqlConnection {
         }
     }
 
-    pub async fn sync(&mut self) {
+    pub async fn sync(&self) {
         self.database.try_read().unwrap().sync().await.unwrap();
     }
 

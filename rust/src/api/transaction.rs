@@ -1,6 +1,7 @@
-use std::{collections::HashMap, ops::Deref};
+use std::collections::HashMap;
 
-use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
+use flutter_rust_bridge::frb;
+use flutter_rust_bridge::RustAutoOpaqueNom;
 pub use libsql::Connection;
 pub use libsql::Transaction as InnerTransaction;
 
@@ -13,17 +14,17 @@ use crate::utils::{
 #[frb(opaque)]
 pub struct LibsqlTransaction {
     // TODO: this is a hack
-    transaction: HashMap<u8, InnerTransaction>,
+    transaction: RustAutoOpaqueNom<HashMap<u8, InnerTransaction>>,
 }
 
 impl LibsqlTransaction {
-    pub fn new(transaction: InnerTransaction) -> LibsqlTransaction {
-        LibsqlTransaction {
-            transaction: HashMap::from([(0, transaction)]),
+    pub fn new(transaction: InnerTransaction) -> Self {
+        Self {
+            transaction: RustAutoOpaqueNom::new(HashMap::from([(0, transaction)])),
         }
     }
 
-    pub async fn query(&mut self, sql: String, parameters: Option<LibsqlParams>) -> QueryResult {
+    pub async fn query(&self, sql: String, parameters: Option<LibsqlParams>) -> QueryResult {
         let params: libsql::params::Params = parameters
             .unwrap_or(LibsqlParams {
                 positional: None,
@@ -32,6 +33,8 @@ impl LibsqlTransaction {
             .into();
         let result = self
             .transaction
+            .try_read()
+            .unwrap()
             .get(&0)
             .unwrap()
             .query(&sql, params)
@@ -40,7 +43,7 @@ impl LibsqlTransaction {
         rows_to_query_result(result).await
     }
 
-    pub async fn execute(self, sql: String, parameters: Option<LibsqlParams>) -> ExecuteResult {
+    pub async fn execute(&self, sql: String, parameters: Option<LibsqlParams>) -> ExecuteResult {
         let params: libsql::params::Params = parameters
             .unwrap_or(LibsqlParams {
                 positional: None,
@@ -49,6 +52,8 @@ impl LibsqlTransaction {
             .into();
         let rows_affected = self
             .transaction
+            .try_read()
+            .unwrap()
             .get(&0)
             .unwrap()
             .execute(&sql, params)
@@ -58,13 +63,25 @@ impl LibsqlTransaction {
     }
 
     pub async fn commit(&mut self) {
-        let t = self.transaction.remove(&0).unwrap();
-        t.commit().await.unwrap();
+        self.transaction
+            .try_write()
+            .unwrap()
+            .remove(&0)
+            .unwrap()
+            .commit()
+            .await
+            .unwrap();
     }
 
     pub async fn rollback(&mut self) {
-        let t = self.transaction.remove(&0).unwrap();
-        t.rollback().await.unwrap();
+        self.transaction
+            .try_write()
+            .unwrap()
+            .remove(&0)
+            .unwrap()
+            .rollback()
+            .await
+            .unwrap();
     }
 }
 

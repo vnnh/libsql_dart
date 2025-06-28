@@ -90,16 +90,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  LibsqlConnection
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-          dynamic raw);
-
-  @protected
-  LibsqlStatement
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          dynamic raw);
-
-  @protected
   LibsqlTransaction
       dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           dynamic raw);
@@ -107,6 +97,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   LibsqlConnection
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
+          dynamic raw);
+
+  @protected
+  LibsqlStatement
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+          dynamic raw);
+
+  @protected
+  LibsqlTransaction
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           dynamic raw);
 
   @protected
@@ -311,16 +311,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  LibsqlConnection
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-          SseDeserializer deserializer);
-
-  @protected
-  LibsqlStatement
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          SseDeserializer deserializer);
-
-  @protected
   LibsqlTransaction
       sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           SseDeserializer deserializer);
@@ -328,6 +318,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   LibsqlConnection
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
+          SseDeserializer deserializer);
+
+  @protected
+  LibsqlStatement
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+          SseDeserializer deserializer);
+
+  @protected
+  LibsqlTransaction
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           SseDeserializer deserializer);
 
   @protected
@@ -545,16 +545,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
-          LibsqlConnection self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
-          LibsqlStatement self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
           LibsqlTransaction self, SseSerializer serializer);
 
@@ -562,6 +552,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlConnection(
           LibsqlConnection self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlStatement(
+          LibsqlStatement self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLibsqlTransaction(
+          LibsqlTransaction self, SseSerializer serializer);
 
   @protected
   void sse_encode_Map_String_libsql_return_value_None(

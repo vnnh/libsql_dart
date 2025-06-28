@@ -555,22 +555,21 @@ fn wire__crate__api__connection__LibsqlConnection_sync_impl(
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
+                                    &api_that, 0, false,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                        Some(api_that.lockable_decode_async_ref().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let mut api_that_guard = api_that_guard.unwrap();
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::connection::LibsqlConnection::sync(&mut *api_that_guard)
-                                .await;
+                            crate::api::connection::LibsqlConnection::sync(&*api_that_guard).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -680,22 +679,22 @@ fn wire__crate__api__statement__LibsqlStatement_execute_impl(
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
+                                    &api_that, 0, false,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                        Some(api_that.lockable_decode_async_ref().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let mut api_that_guard = api_that_guard.unwrap();
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok(
                             crate::api::statement::LibsqlStatement::execute(
-                                &mut *api_that_guard,
+                                &*api_that_guard,
                                 api_parameters,
                             )
                             .await,
@@ -741,21 +740,21 @@ fn wire__crate__api__statement__LibsqlStatement_finalize_impl(
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
+                                    &api_that, 0, false,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                        Some(api_that.lockable_decode_async_ref().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let mut api_that_guard = api_that_guard.unwrap();
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::statement::LibsqlStatement::finalize(&mut *api_that_guard)
+                            crate::api::statement::LibsqlStatement::finalize(&*api_that_guard)
                                 .await;
                         })?;
                         Ok(output_ok)
@@ -836,22 +835,22 @@ fn wire__crate__api__statement__LibsqlStatement_query_impl(
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
+                                    &api_that, 0, false,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                        Some(api_that.lockable_decode_async_ref().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let mut api_that_guard = api_that_guard.unwrap();
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok(
                             crate::api::statement::LibsqlStatement::query(
-                                &mut *api_that_guard,
+                                &*api_that_guard,
                                 api_parameters,
                             )
                             .await,
@@ -897,22 +896,21 @@ fn wire__crate__api__statement__LibsqlStatement_reset_impl(
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
+                                    &api_that, 0, false,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                        Some(api_that.lockable_decode_async_ref().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let mut api_that_guard = api_that_guard.unwrap();
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::statement::LibsqlStatement::reset(&mut *api_that_guard)
-                                .await;
+                            crate::api::statement::LibsqlStatement::reset(&*api_that_guard).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -1004,7 +1002,9 @@ fn wire__crate__api__transaction__LibsqlTransaction_execute_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <LibsqlTransaction>::sse_decode(&mut deserializer);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlTransaction>,
+            >>::sse_decode(&mut deserializer);
             let api_sql = <String>::sse_decode(&mut deserializer);
             let api_parameters =
                 <Option<crate::utils::params::LibsqlParams>>::sse_decode(&mut deserializer);
@@ -1012,9 +1012,26 @@ fn wire__crate__api__transaction__LibsqlTransaction_execute_impl(
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok(
                             crate::api::transaction::LibsqlTransaction::execute(
-                                api_that,
+                                &*api_that_guard,
                                 api_sql,
                                 api_parameters,
                             )
@@ -1099,22 +1116,22 @@ fn wire__crate__api__transaction__LibsqlTransaction_query_impl(
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
+                                    &api_that, 0, false,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                        Some(api_that.lockable_decode_async_ref().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let mut api_that_guard = api_that_guard.unwrap();
+                        let api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok(
                             crate::api::transaction::LibsqlTransaction::query(
-                                &mut *api_that_guard,
+                                &*api_that_guard,
                                 api_sql,
                                 api_parameters,
                             )

@@ -1,4 +1,3 @@
-use flutter_rust_bridge::RustAutoOpaqueNom;
 use libsql::Builder;
 use std::time::Duration;
 

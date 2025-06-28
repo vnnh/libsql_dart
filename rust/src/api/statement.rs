@@ -20,15 +20,15 @@ impl LibsqlStatement {
         }
     }
 
-    pub async fn finalize(&mut self) {
+    pub async fn finalize(&self) {
         self.statement.try_write().unwrap().finalize();
     }
 
-    pub async fn reset(&mut self) {
+    pub async fn reset(&self) {
         self.statement.try_write().unwrap().reset();
     }
 
-    pub async fn query(&mut self, parameters: Option<LibsqlParams>) -> QueryResult {
+    pub async fn query(&self, parameters: Option<LibsqlParams>) -> QueryResult {
         let params: libsql::params::Params = parameters
             .unwrap_or(LibsqlParams {
                 positional: None,
@@ -45,7 +45,7 @@ impl LibsqlStatement {
         rows_to_query_result(result).await
     }
 
-    pub async fn execute(&mut self, parameters: Option<LibsqlParams>) -> ExecuteResult {
+    pub async fn execute(&self, parameters: Option<LibsqlParams>) -> ExecuteResult {
         let params: libsql::params::Params = parameters
             .unwrap_or(LibsqlParams {
                 positional: None,
