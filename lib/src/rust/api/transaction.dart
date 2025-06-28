@@ -9,41 +9,25 @@ import '../utils/result.dart';
 import '../utils/return_value.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class LibsqlTransaction {
-  final String transactionId;
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerTransaction>>
+abstract class InnerTransaction implements RustOpaqueInterface {}
 
-  const LibsqlTransaction({
-    required this.transactionId,
-  });
-
-  Future<TransactionCommitResult> commit() =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionCommit(
-        that: this,
-      );
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlTransaction>>
+abstract class LibsqlTransaction implements RustOpaqueInterface {
+  Future<void> commit();
 
   Future<ExecuteResult> execute(
-          {required String sql, LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionExecute(
-          that: this, sql: sql, parameters: parameters);
+      {required String sql, LibsqlParams? parameters});
 
-  Future<QueryResult> query({required String sql, LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionQuery(
-          that: this, sql: sql, parameters: parameters);
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<LibsqlTransaction> newInstance(
+          {required InnerTransaction transaction}) =>
+      RustLib.instance.api
+          .crateApiTransactionLibsqlTransactionNew(transaction: transaction);
 
-  Future<TransactionRollbackResult> rollback() =>
-      RustLib.instance.api.crateApiTransactionLibsqlTransactionRollback(
-        that: this,
-      );
+  Future<QueryResult> query({required String sql, LibsqlParams? parameters});
 
-  @override
-  int get hashCode => transactionId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LibsqlTransaction &&
-          runtimeType == other.runtimeType &&
-          transactionId == other.transactionId;
+  Future<void> rollback();
 }
 
 enum LibsqlTransactionBehavior {

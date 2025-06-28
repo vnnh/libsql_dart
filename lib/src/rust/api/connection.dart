@@ -11,64 +11,37 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'statement.dart';
 import 'transaction.dart';
 
-class LibsqlConnection {
-  final String dbId;
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerConnection>>
+abstract class InnerConnection implements RustOpaqueInterface {}
 
-  const LibsqlConnection({
-    required this.dbId,
-  });
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InnerDatabase>>
+abstract class InnerDatabase implements RustOpaqueInterface {}
 
-  Future<BatchResult> batch({required String sql}) => RustLib.instance.api
-      .crateApiConnectionLibsqlConnectionBatch(that: this, sql: sql);
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlConnection>>
+abstract class LibsqlConnection implements RustOpaqueInterface {
+  Future<void> batch({required String sql});
 
-  Future<void> close() =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionClose(
-        that: this,
-      );
+  Future<void> disableExtension();
 
-  Future<void> disableExtension() =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionDisableExtension(
-        that: this,
-      );
-
-  Future<void> enableExtension() =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionEnableExtension(
-        that: this,
-      );
+  Future<void> enableExtension();
 
   Future<ExecuteResult> execute(
-          {required String sql, LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionExecute(
-          that: this, sql: sql, parameters: parameters);
+      {required String sql, LibsqlParams? parameters});
 
-  Future<void> loadExtension({required String path, String? entryPoint}) =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionLoadExtension(
-          that: this, path: path, entryPoint: entryPoint);
+  Future<void> loadExtension({required String path, String? entryPoint});
 
-  Future<PrepareResult> prepare({required String sql}) => RustLib.instance.api
-      .crateApiConnectionLibsqlConnectionPrepare(that: this, sql: sql);
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<LibsqlConnection> newInstance(
+          {required InnerConnection connection,
+          required InnerDatabase database}) =>
+      RustLib.instance.api.crateApiConnectionLibsqlConnectionNew(
+          connection: connection, database: database);
 
-  Future<QueryResult> query({required String sql, LibsqlParams? parameters}) =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionQuery(
-          that: this, sql: sql, parameters: parameters);
+  Future<LibsqlStatement> prepare({required String sql});
 
-  Future<SyncResult> sync_() =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionSync(
-        that: this,
-      );
+  Future<QueryResult> query({required String sql, LibsqlParams? parameters});
 
-  Future<TransactionResult> transaction(
-          {LibsqlTransactionBehavior? behavior}) =>
-      RustLib.instance.api.crateApiConnectionLibsqlConnectionTransaction(
-          that: this, behavior: behavior);
+  Future<void> sync_();
 
-  @override
-  int get hashCode => dbId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LibsqlConnection &&
-          runtimeType == other.runtimeType &&
-          dbId == other.dbId;
+  Future<LibsqlTransaction> transaction({LibsqlTransactionBehavior? behavior});
 }

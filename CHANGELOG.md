@@ -1,3 +1,7 @@
+## 0.8.0
+
+- non-functional: leaner rust side
+
 ## 0.7.0
 
 - prebuilt binaries, enables installing without having `rustup` installed

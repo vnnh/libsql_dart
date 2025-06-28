@@ -3,16 +3,16 @@ import 'package:libsql_dart/src/rust/api/transaction.dart';
 import 'package:libsql_dart/src/rust/utils/params.dart';
 
 class Transaction {
-  Transaction(this.transaction);
+  Transaction(this.inner);
 
-  final LibsqlTransaction transaction;
+  final LibsqlTransaction inner;
 
   Future<List<Map<String, dynamic>>> query(
     String sql, {
     Map<String, dynamic>? named,
     List<dynamic>? positional,
   }) async {
-    final res = await transaction.query(
+    final res = await inner.query(
       sql: sql,
       parameters: LibsqlParams(
         named: named?.map((k, v) => MapEntry(k, toLibsqlValue(v))),
@@ -44,7 +44,7 @@ class Transaction {
     Map<String, dynamic>? named,
     List<dynamic>? positional,
   }) async {
-    final res = await transaction.execute(
+    final res = await inner.execute(
       sql: sql,
       parameters: LibsqlParams(
         named: named?.map((k, v) => MapEntry(k, toLibsqlValue(v))),
@@ -55,10 +55,10 @@ class Transaction {
   }
 
   Future<void> commit() async {
-    await transaction.commit();
+    await inner.commit();
   }
 
   Future<void> rollback() async {
-    await transaction.rollback();
+    await inner.rollback();
   }
 }

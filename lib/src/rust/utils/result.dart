@@ -3,42 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../api/connection.dart';
-import '../api/statement.dart';
-import '../api/transaction.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'return_value.dart';
-
-class BatchResult {
-  const BatchResult();
-
-  @override
-  int get hashCode => 0;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BatchResult && runtimeType == other.runtimeType;
-}
-
-class ConnectResult {
-  final LibsqlConnection connection;
-
-  const ConnectResult({
-    required this.connection,
-  });
-
-  @override
-  int get hashCode => connection.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ConnectResult &&
-          runtimeType == other.runtimeType &&
-          connection == other.connection;
-}
 
 class ExecuteResult {
   final BigInt rowsAffected;
@@ -56,24 +23,6 @@ class ExecuteResult {
       other is ExecuteResult &&
           runtimeType == other.runtimeType &&
           rowsAffected == other.rowsAffected;
-}
-
-class PrepareResult {
-  final LibsqlStatement statement;
-
-  const PrepareResult({
-    required this.statement,
-  });
-
-  @override
-  int get hashCode => statement.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PrepareResult &&
-          runtimeType == other.runtimeType &&
-          statement == other.statement;
 }
 
 class QueryResult {
@@ -105,58 +54,4 @@ class QueryResult {
           columns == other.columns &&
           rowsAffected == other.rowsAffected &&
           lastInsertRowid == other.lastInsertRowid;
-}
-
-class SyncResult {
-  const SyncResult();
-
-  @override
-  int get hashCode => 0;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SyncResult && runtimeType == other.runtimeType;
-}
-
-class TransactionCommitResult {
-  const TransactionCommitResult();
-
-  @override
-  int get hashCode => 0;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TransactionCommitResult && runtimeType == other.runtimeType;
-}
-
-class TransactionResult {
-  final LibsqlTransaction transaction;
-
-  const TransactionResult({
-    required this.transaction,
-  });
-
-  @override
-  int get hashCode => transaction.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TransactionResult &&
-          runtimeType == other.runtimeType &&
-          transaction == other.transaction;
-}
-
-class TransactionRollbackResult {
-  const TransactionRollbackResult();
-
-  @override
-  int get hashCode => 0;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TransactionRollbackResult && runtimeType == other.runtimeType;
 }

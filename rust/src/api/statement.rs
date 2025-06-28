@@ -1,31 +1,31 @@
-use super::libsql::STATEMENT_REGISTRY;
+use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
+#[frb(name = "_Statement")]
+pub use libsql::Statement as InnerStatement;
+
 use crate::utils::{
     helpers::rows_to_query_result,
     params::LibsqlParams,
     result::{ExecuteResult, QueryResult},
 };
 
+#[frb(opaque)]
 pub struct LibsqlStatement {
-    pub statement_id: String,
+    statement: RustAutoOpaqueNom<InnerStatement>,
 }
 
 impl LibsqlStatement {
+    pub fn new(statement: InnerStatement) -> LibsqlStatement {
+        LibsqlStatement {
+            statement: RustAutoOpaqueNom::new(statement),
+        }
+    }
+
     pub async fn finalize(&self) {
-        STATEMENT_REGISTRY
-            .lock()
-            .await
-            .remove(&self.statement_id)
-            .unwrap()
-            .finalize();
+        self.statement.try_write().unwrap().finalize();
     }
 
     pub async fn reset(&self) {
-        STATEMENT_REGISTRY
-            .lock()
-            .await
-            .remove(&self.statement_id)
-            .unwrap()
-            .reset();
+        self.statement.try_write().unwrap().reset();
     }
 
     pub async fn query(&self, parameters: Option<LibsqlParams>) -> QueryResult {
@@ -35,10 +35,9 @@ impl LibsqlStatement {
                 named: None,
             })
             .into();
-        let result = STATEMENT_REGISTRY
-            .lock()
-            .await
-            .remove(&self.statement_id)
+        let result = self
+            .statement
+            .try_write()
             .unwrap()
             .query(params)
             .await
@@ -53,10 +52,9 @@ impl LibsqlStatement {
                 named: None,
             })
             .into();
-        let rows_affected = STATEMENT_REGISTRY
-            .lock()
-            .await
-            .remove(&self.statement_id)
+        let rows_affected = self
+            .statement
+            .try_write()
             .unwrap()
             .execute(params)
             .await
