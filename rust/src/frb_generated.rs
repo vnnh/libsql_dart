@@ -1004,9 +1004,7 @@ fn wire__crate__api__transaction__LibsqlTransaction_execute_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlTransaction>,
-            >>::sse_decode(&mut deserializer);
+            let api_that = <LibsqlTransaction>::sse_decode(&mut deserializer);
             let api_sql = <String>::sse_decode(&mut deserializer);
             let api_parameters =
                 <Option<crate::utils::params::LibsqlParams>>::sse_decode(&mut deserializer);
@@ -1014,26 +1012,9 @@ fn wire__crate__api__transaction__LibsqlTransaction_execute_impl(
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
-                        let mut api_that_guard = None;
-                        let decode_indices_ =
-                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
-                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, true,
-                                )],
-                            );
-                        for i in decode_indices_ {
-                            match i {
-                                0 => {
-                                    api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref_mut().await)
-                                }
-                                _ => unreachable!(),
-                            }
-                        }
-                        let mut api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok(
                             crate::api::transaction::LibsqlTransaction::execute(
-                                &mut *api_that_guard,
+                                api_that,
                                 api_sql,
                                 api_parameters,
                             )
@@ -1169,13 +1150,35 @@ fn wire__crate__api__transaction__LibsqlTransaction_rollback_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <LibsqlTransaction>::sse_decode(&mut deserializer);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<LibsqlTransaction>,
+            >>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
+                        let mut api_that_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_that, 0, true,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_that_guard =
+                                        Some(api_that.lockable_decode_async_ref_mut().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let mut api_that_guard = api_that_guard.unwrap();
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::transaction::LibsqlTransaction::rollback(api_that).await;
+                            crate::api::transaction::LibsqlTransaction::rollback(
+                                &mut *api_that_guard,
+                            )
+                            .await;
                         })?;
                         Ok(output_ok)
                     })()
