@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use super::{
     statement::LibsqlStatement,
     transaction::{LibsqlTransaction, LibsqlTransactionBehavior},
@@ -6,7 +8,6 @@ use crate::utils::{
     params::LibsqlParams,
     result::{ExecuteResult, QueryResult},
 };
-use async_std::path::Path;
 use flutter_rust_bridge::{frb, RustAutoOpaqueNom};
 pub use libsql::TransactionBehavior;
 pub use libsql::{Connection as InnerConnection, Database as InnerDatabase};
