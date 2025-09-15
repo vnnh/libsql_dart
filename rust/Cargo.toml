@@ -8,7 +8,7 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 flutter_rust_bridge = "=2.10.0"
 hyper-rustls = { version = "0.25", features = ["webpki-roots"] }
-libsql = "0.9.11"
+libsql = "0.9.23"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
