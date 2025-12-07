@@ -12,7 +12,8 @@ part of 'params.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$LibsqlValue {
@@ -23,8 +24,7 @@ mixin _$LibsqlValue {
     required TResult Function(String field0) text,
     required TResult Function(Uint8List field0) blob,
     required TResult Function() null_,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int field0)? integer,
@@ -32,8 +32,7 @@ mixin _$LibsqlValue {
     TResult? Function(String field0)? text,
     TResult? Function(Uint8List field0)? blob,
     TResult? Function()? null_,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int field0)? integer,
@@ -42,8 +41,7 @@ mixin _$LibsqlValue {
     TResult Function(Uint8List field0)? blob,
     TResult Function()? null_,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LibsqlValue_Integer value) integer,
@@ -51,8 +49,7 @@ mixin _$LibsqlValue {
     required TResult Function(LibsqlValue_Text value) text,
     required TResult Function(LibsqlValue_Blob value) blob,
     required TResult Function(LibsqlValue_Null value) null_,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LibsqlValue_Integer value)? integer,
@@ -60,8 +57,7 @@ mixin _$LibsqlValue {
     TResult? Function(LibsqlValue_Text value)? text,
     TResult? Function(LibsqlValue_Blob value)? blob,
     TResult? Function(LibsqlValue_Null value)? null_,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LibsqlValue_Integer value)? integer,
@@ -70,15 +66,15 @@ mixin _$LibsqlValue {
     TResult Function(LibsqlValue_Blob value)? blob,
     TResult Function(LibsqlValue_Null value)? null_,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $LibsqlValueCopyWith<$Res> {
   factory $LibsqlValueCopyWith(
-          LibsqlValue value, $Res Function(LibsqlValue) then) =
-      _$LibsqlValueCopyWithImpl<$Res, LibsqlValue>;
+    LibsqlValue value,
+    $Res Function(LibsqlValue) then,
+  ) = _$LibsqlValueCopyWithImpl<$Res, LibsqlValue>;
 }
 
 /// @nodoc
@@ -97,9 +93,10 @@ class _$LibsqlValueCopyWithImpl<$Res, $Val extends LibsqlValue>
 
 /// @nodoc
 abstract class _$$LibsqlValue_IntegerImplCopyWith<$Res> {
-  factory _$$LibsqlValue_IntegerImplCopyWith(_$LibsqlValue_IntegerImpl value,
-          $Res Function(_$LibsqlValue_IntegerImpl) then) =
-      __$$LibsqlValue_IntegerImplCopyWithImpl<$Res>;
+  factory _$$LibsqlValue_IntegerImplCopyWith(
+    _$LibsqlValue_IntegerImpl value,
+    $Res Function(_$LibsqlValue_IntegerImpl) then,
+  ) = __$$LibsqlValue_IntegerImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int field0});
 }
@@ -108,23 +105,24 @@ abstract class _$$LibsqlValue_IntegerImplCopyWith<$Res> {
 class __$$LibsqlValue_IntegerImplCopyWithImpl<$Res>
     extends _$LibsqlValueCopyWithImpl<$Res, _$LibsqlValue_IntegerImpl>
     implements _$$LibsqlValue_IntegerImplCopyWith<$Res> {
-  __$$LibsqlValue_IntegerImplCopyWithImpl(_$LibsqlValue_IntegerImpl _value,
-      $Res Function(_$LibsqlValue_IntegerImpl) _then)
-      : super(_value, _then);
+  __$$LibsqlValue_IntegerImplCopyWithImpl(
+    _$LibsqlValue_IntegerImpl _value,
+    $Res Function(_$LibsqlValue_IntegerImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of LibsqlValue
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_$LibsqlValue_IntegerImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? field0 = null}) {
+    return _then(
+      _$LibsqlValue_IntegerImpl(
+        null == field0
+            ? _value.field0
+            : field0 // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -159,7 +157,9 @@ class _$LibsqlValue_IntegerImpl extends LibsqlValue_Integer {
   @pragma('vm:prefer-inline')
   _$$LibsqlValue_IntegerImplCopyWith<_$LibsqlValue_IntegerImpl> get copyWith =>
       __$$LibsqlValue_IntegerImplCopyWithImpl<_$LibsqlValue_IntegerImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -258,9 +258,10 @@ abstract class LibsqlValue_Integer extends LibsqlValue {
 
 /// @nodoc
 abstract class _$$LibsqlValue_RealImplCopyWith<$Res> {
-  factory _$$LibsqlValue_RealImplCopyWith(_$LibsqlValue_RealImpl value,
-          $Res Function(_$LibsqlValue_RealImpl) then) =
-      __$$LibsqlValue_RealImplCopyWithImpl<$Res>;
+  factory _$$LibsqlValue_RealImplCopyWith(
+    _$LibsqlValue_RealImpl value,
+    $Res Function(_$LibsqlValue_RealImpl) then,
+  ) = __$$LibsqlValue_RealImplCopyWithImpl<$Res>;
   @useResult
   $Res call({double field0});
 }
@@ -269,23 +270,24 @@ abstract class _$$LibsqlValue_RealImplCopyWith<$Res> {
 class __$$LibsqlValue_RealImplCopyWithImpl<$Res>
     extends _$LibsqlValueCopyWithImpl<$Res, _$LibsqlValue_RealImpl>
     implements _$$LibsqlValue_RealImplCopyWith<$Res> {
-  __$$LibsqlValue_RealImplCopyWithImpl(_$LibsqlValue_RealImpl _value,
-      $Res Function(_$LibsqlValue_RealImpl) _then)
-      : super(_value, _then);
+  __$$LibsqlValue_RealImplCopyWithImpl(
+    _$LibsqlValue_RealImpl _value,
+    $Res Function(_$LibsqlValue_RealImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of LibsqlValue
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_$LibsqlValue_RealImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+  $Res call({Object? field0 = null}) {
+    return _then(
+      _$LibsqlValue_RealImpl(
+        null == field0
+            ? _value.field0
+            : field0 // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
@@ -320,7 +322,9 @@ class _$LibsqlValue_RealImpl extends LibsqlValue_Real {
   @pragma('vm:prefer-inline')
   _$$LibsqlValue_RealImplCopyWith<_$LibsqlValue_RealImpl> get copyWith =>
       __$$LibsqlValue_RealImplCopyWithImpl<_$LibsqlValue_RealImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -418,9 +422,10 @@ abstract class LibsqlValue_Real extends LibsqlValue {
 
 /// @nodoc
 abstract class _$$LibsqlValue_TextImplCopyWith<$Res> {
-  factory _$$LibsqlValue_TextImplCopyWith(_$LibsqlValue_TextImpl value,
-          $Res Function(_$LibsqlValue_TextImpl) then) =
-      __$$LibsqlValue_TextImplCopyWithImpl<$Res>;
+  factory _$$LibsqlValue_TextImplCopyWith(
+    _$LibsqlValue_TextImpl value,
+    $Res Function(_$LibsqlValue_TextImpl) then,
+  ) = __$$LibsqlValue_TextImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String field0});
 }
@@ -429,23 +434,24 @@ abstract class _$$LibsqlValue_TextImplCopyWith<$Res> {
 class __$$LibsqlValue_TextImplCopyWithImpl<$Res>
     extends _$LibsqlValueCopyWithImpl<$Res, _$LibsqlValue_TextImpl>
     implements _$$LibsqlValue_TextImplCopyWith<$Res> {
-  __$$LibsqlValue_TextImplCopyWithImpl(_$LibsqlValue_TextImpl _value,
-      $Res Function(_$LibsqlValue_TextImpl) _then)
-      : super(_value, _then);
+  __$$LibsqlValue_TextImplCopyWithImpl(
+    _$LibsqlValue_TextImpl _value,
+    $Res Function(_$LibsqlValue_TextImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of LibsqlValue
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_$LibsqlValue_TextImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? field0 = null}) {
+    return _then(
+      _$LibsqlValue_TextImpl(
+        null == field0
+            ? _value.field0
+            : field0 // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -480,7 +486,9 @@ class _$LibsqlValue_TextImpl extends LibsqlValue_Text {
   @pragma('vm:prefer-inline')
   _$$LibsqlValue_TextImplCopyWith<_$LibsqlValue_TextImpl> get copyWith =>
       __$$LibsqlValue_TextImplCopyWithImpl<_$LibsqlValue_TextImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -578,9 +586,10 @@ abstract class LibsqlValue_Text extends LibsqlValue {
 
 /// @nodoc
 abstract class _$$LibsqlValue_BlobImplCopyWith<$Res> {
-  factory _$$LibsqlValue_BlobImplCopyWith(_$LibsqlValue_BlobImpl value,
-          $Res Function(_$LibsqlValue_BlobImpl) then) =
-      __$$LibsqlValue_BlobImplCopyWithImpl<$Res>;
+  factory _$$LibsqlValue_BlobImplCopyWith(
+    _$LibsqlValue_BlobImpl value,
+    $Res Function(_$LibsqlValue_BlobImpl) then,
+  ) = __$$LibsqlValue_BlobImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Uint8List field0});
 }
@@ -589,23 +598,24 @@ abstract class _$$LibsqlValue_BlobImplCopyWith<$Res> {
 class __$$LibsqlValue_BlobImplCopyWithImpl<$Res>
     extends _$LibsqlValueCopyWithImpl<$Res, _$LibsqlValue_BlobImpl>
     implements _$$LibsqlValue_BlobImplCopyWith<$Res> {
-  __$$LibsqlValue_BlobImplCopyWithImpl(_$LibsqlValue_BlobImpl _value,
-      $Res Function(_$LibsqlValue_BlobImpl) _then)
-      : super(_value, _then);
+  __$$LibsqlValue_BlobImplCopyWithImpl(
+    _$LibsqlValue_BlobImpl _value,
+    $Res Function(_$LibsqlValue_BlobImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of LibsqlValue
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_$LibsqlValue_BlobImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as Uint8List,
-    ));
+  $Res call({Object? field0 = null}) {
+    return _then(
+      _$LibsqlValue_BlobImpl(
+        null == field0
+            ? _value.field0
+            : field0 // ignore: cast_nullable_to_non_nullable
+                  as Uint8List,
+      ),
+    );
   }
 }
 
@@ -641,7 +651,9 @@ class _$LibsqlValue_BlobImpl extends LibsqlValue_Blob {
   @pragma('vm:prefer-inline')
   _$$LibsqlValue_BlobImplCopyWith<_$LibsqlValue_BlobImpl> get copyWith =>
       __$$LibsqlValue_BlobImplCopyWithImpl<_$LibsqlValue_BlobImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -740,18 +752,20 @@ abstract class LibsqlValue_Blob extends LibsqlValue {
 
 /// @nodoc
 abstract class _$$LibsqlValue_NullImplCopyWith<$Res> {
-  factory _$$LibsqlValue_NullImplCopyWith(_$LibsqlValue_NullImpl value,
-          $Res Function(_$LibsqlValue_NullImpl) then) =
-      __$$LibsqlValue_NullImplCopyWithImpl<$Res>;
+  factory _$$LibsqlValue_NullImplCopyWith(
+    _$LibsqlValue_NullImpl value,
+    $Res Function(_$LibsqlValue_NullImpl) then,
+  ) = __$$LibsqlValue_NullImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LibsqlValue_NullImplCopyWithImpl<$Res>
     extends _$LibsqlValueCopyWithImpl<$Res, _$LibsqlValue_NullImpl>
     implements _$$LibsqlValue_NullImplCopyWith<$Res> {
-  __$$LibsqlValue_NullImplCopyWithImpl(_$LibsqlValue_NullImpl _value,
-      $Res Function(_$LibsqlValue_NullImpl) _then)
-      : super(_value, _then);
+  __$$LibsqlValue_NullImplCopyWithImpl(
+    _$LibsqlValue_NullImpl _value,
+    $Res Function(_$LibsqlValue_NullImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of LibsqlValue
   /// with the given fields replaced by the non-null parameter values.
